@@ -1,0 +1,176 @@
+@import 'bourbon'; // http://bourbon.io/
+
+@import '../partials/variables'; // colors, fonts etc...
+
+@import '../partials/mixins'; // custom mixins
+
+@import '../partials/layout'; // responsive grid and media queries
+
+/* -------------------------------- 
+
+Primary style
+
+-------------------------------- */
+
+*, *:after, *:before {
+	@include box-sizing(border-box);
+}
+
+body {
+	font: {
+		size: 100%;
+		family: $primary-font; // variables inside partials > _variables.scss
+	}
+	color: $color-1;
+	background-color: $color-1;
+}
+
+a {
+	color: $color-2;
+	text-decoration: none;
+}
+
+img {
+	max-width: 100%;
+}
+
+/* -------------------------------- 
+
+Main components 
+
+-------------------------------- */
+
+header {
+	position: relative;
+	height: 160px;
+	line-height: 160px;
+	text-align: center;
+
+	h1 {
+		@include font-size(22px);
+		color: $color-3;
+		font-weight: 300;
+		@include font-smoothing;
+	}
+
+	@include MQ(M) {
+		height: 240px;
+		line-height: 240px;
+
+		h1 {
+			@include font-size(32px);
+		}
+	}
+}
+
+.cd-image-container {
+	position: relative;
+	width: 90%;
+	max-width: $M; // breakpoints inside partials > _layout.scss
+	margin: 0em auto;
+
+	img {
+		display: block;
+	}
+}
+
+.cd-image-label {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	color: $color-3;
+	padding: 1em;
+	@include font-smoothing;
+	opacity: 0;
+	@include transform(translateY(20px));
+	-webkit-transition: -webkit-transform .3s $bounce-in-duration, opacity .3s $bounce-in-duration;
+	-moz-transition: -moz-transform .3s $bounce-in-duration, opacity .3s $bounce-in-duration;
+	transition: transform .3s $bounce-in-duration, opacity .3s $bounce-in-duration;
+
+	&.is-hidden {
+		visibility: hidden;
+	}
+
+	.is-visible & {
+		opacity: 1;
+		@include transform(translateY(0));
+	}
+}
+
+.cd-resize-img {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 0;
+	height: 100%;
+	overflow: hidden;
+	/* Force Hardware Acceleration in WebKit */
+	@include transform(translateZ(0));
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
+
+	img {
+		position: absolute;
+		left: 0;
+		top: 0;
+		display: block;
+		height: 100%;
+		width: auto;
+		max-width: none;
+	}
+
+	.cd-image-label {
+		right: auto;
+		left: 0;
+	}
+
+	.is-visible & {
+		width: 50%;
+		/* bounce in animation of the modified image */
+		@include animation(cd-bounce-in $bounce-in-duration);
+	}
+}
+
+@include keyframes(cd-bounce-in) {
+	0% {
+		width: 0;
+	}
+
+	60% {
+		width: 55%;
+	}
+
+	100% {
+		width: 50%;
+	}
+}
+
+.cd-handle {
+	position: absolute;
+	height: 44px;
+	width: 44px;
+	/* center the element */
+	left: 50%;
+	top: 50%;
+	margin-left: -22px;
+	margin-top: -22px;
+	border-radius: 50%;
+	background: $color-2 url('../img/cd-arrows.svg') no-repeat center center;
+	cursor: move;
+	box-shadow: 0 0 0 6px rgba(#000, .2), 0 0 10px rgba(#000, .6), inset 0 1px 0 rgba(#fff, .3);
+	opacity: 0;
+	@include transform(translate3d(0,0,0) scale(0));
+
+	&.draggable {
+		/* change background color when element is active */
+		background-color: $color-1;
+	}
+
+	.is-visible & {
+		opacity: 1;
+		@include transform(translate3d(0,0,0) scale(1));
+		-webkit-transition: -webkit-transform .3s $bounce-in-duration, opacity 0s $bounce-in-duration;
+		-moz-transition: -moz-transform .3s $bounce-in-duration, opacity 0s $bounce-in-duration;
+		transition: transform .3s $bounce-in-duration, opacity 0s $bounce-in-duration;
+	}
+}
