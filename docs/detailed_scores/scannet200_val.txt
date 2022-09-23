@@ -1,0 +1,203 @@
+################################################################
+what           :             AP         AP_50%         AP_25%
+################################################################
+chair          :          0.751          0.881          0.913
+table          :          0.603          0.763          0.815
+door           :          0.632          0.775          0.836
+couch          :          0.482          0.664          0.855
+cabinet        :          0.281          0.480          0.550
+shelf          :          0.331          0.553          0.618
+desk           :          0.356          0.682          0.802
+office chair   :          0.311          0.330          0.337
+bed            :          0.644          0.923          0.984
+pillow         :          0.458          0.571          0.629
+sink           :          0.522          0.689          0.906
+picture        :          0.483          0.559          0.603
+window         :          0.341          0.527          0.765
+toilet         :          0.917          0.981          0.999
+bookshelf      :          0.208          0.347          0.440
+monitor        :          0.653          0.862          0.936
+curtain        :          0.423          0.617          0.722
+book           :          0.195          0.315          0.431
+armchair       :          0.578          0.622          0.626
+coffee table   :          0.695          0.820          0.830
+box            :          0.077          0.124          0.203
+refrigerator   :          0.630          0.781          0.794
+lamp           :          0.538          0.739          0.874
+kitchen cabinet:          0.410          0.628          0.786
+towel          :          0.303          0.454          0.547
+clothes        :          0.075          0.116          0.151
+tv             :          0.809          0.908          0.915
+nightstand     :          0.601          0.923          0.928
+counter        :          0.134          0.240          0.326
+dresser        :          0.446          0.645          0.754
+stool          :          0.292          0.412          0.417
+cushion        :          0.000          0.000          0.000
+plant          :          0.356          0.515          0.590
+ceiling        :          0.474          0.697          0.791
+bathtub        :          0.769          0.909          0.954
+end table      :          0.437          0.533          0.544
+dining table   :          0.113          0.152          0.170
+keyboard       :          0.456          0.625          0.664
+bag            :          0.107          0.132          0.149
+backpack       :          0.563          0.718          0.751
+toilet paper   :          0.511          0.632          0.715
+printer        :          0.691          0.722          0.726
+tv stand       :          0.684          0.832          0.833
+whiteboard     :          0.570          0.753          0.825
+blanket        :          0.002          0.005          0.049
+shower curtain :          0.553          0.701          0.803
+trash can      :          0.709          0.811          0.845
+closet         :          0.003          0.013          0.069
+stairs         :          0.399          0.761          0.762
+microwave      :          0.554          0.753          0.792
+stove          :          0.544          0.870          0.952
+shoe           :          0.290          0.414          0.549
+computer tower :          0.619          0.750          0.782
+bottle         :          0.108          0.132          0.184
+bin            :          0.016          0.017          0.018
+ottoman        :          0.674          0.775          0.796
+bench          :          0.259          0.436          0.441
+board          :          0.030          0.039          0.045
+washing machine:          0.177          0.339          0.661
+mirror         :          0.392          0.624          0.797
+copier         :          0.748          0.922          0.922
+basket         :          0.001          0.001          0.001
+sofa chair     :          0.194          0.281          0.282
+file cabinet   :          0.512          0.615          0.621
+fan            :          0.130          0.179          0.181
+laptop         :          0.269          0.475          0.684
+shower         :          0.008          0.036          0.043
+paper          :          0.012          0.029          0.040
+person         :          0.032          0.143          0.164
+paper towel dispenser:          0.705          0.848          0.849
+oven           :          0.100          0.138          0.140
+blinds         :          0.007          0.017          0.018
+rack           :          0.000          0.000          0.000
+plate          :          0.000          0.000          0.000
+blackboard     :          0.522          0.639          0.685
+piano          :          0.582          0.817          0.817
+suitcase       :          0.513          0.615          0.617
+rail           :          0.260          0.370          0.406
+radiator       :          0.475          0.639          0.752
+recycling bin  :          0.478          0.535          0.549
+container      :          0.004          0.017          0.020
+wardrobe       :          0.521          0.608          0.614
+soap dispenser :          0.716          0.836          0.837
+telephone      :          0.248          0.499          0.558
+bucket         :          0.162          0.250          0.240
+clock          :          0.380          0.386          0.407
+stand          :          0.000          0.000          0.000
+light          :          0.076          0.148          0.151
+laundry basket :          0.058          0.063          0.071
+pipe           :          0.003          0.006          0.008
+clothes dryer  :          0.012          0.021          0.032
+guitar         :          0.001          0.003          0.003
+toilet paper holder:          0.005          0.013          0.027
+seat           :          0.058          0.060          0.061
+speaker        :          0.000          0.000          0.000
+column         :          0.439          0.449          0.462
+bicycle        :            nan            nan            nan
+ladder         :          0.281          0.405          0.446
+bathroom stall :          0.108          0.289          0.656
+shower wall    :          0.510          0.807          0.808
+cup            :          0.233          0.252          0.310
+jacket         :          0.184          0.192          0.195
+storage bin    :          0.012          0.082          0.099
+coffee maker   :          0.775          1.000          1.000
+dishwasher     :          0.323          0.500          0.588
+paper towel roll:          0.441          0.604          0.637
+machine        :          0.000          0.000          0.000
+mat            :          0.161          0.187          0.306
+windowsill     :          0.080          0.196          0.281
+bar            :          0.144          0.167          0.170
+toaster        :          0.059          0.094          0.449
+bulletin board :          0.262          0.334          0.480
+ironing board  :          0.030          0.047          0.053
+fireplace      :          0.201          0.203          0.600
+soap dish      :          0.213          0.348          0.362
+kitchen counter:          0.388          0.712          0.836
+doorframe      :          0.271          0.517          0.724
+toilet paper dispenser:          0.386          0.701          0.854
+mini fridge    :          0.308          0.385          0.388
+fire extinguisher:          0.054          0.061          0.062
+ball           :          0.030          0.032          0.032
+hat            :          0.000          0.000          0.000
+shower curtain rod:          0.103          0.223          0.252
+water cooler   :          0.019          0.051          0.124
+paper cutter   :          0.183          0.366          0.519
+tray           :          0.003          0.006          0.016
+shower door    :          0.052          0.168          0.682
+pillar         :          0.019          0.028          0.033
+ledge          :          0.033          0.066          0.126
+toaster oven   :          0.012          0.020          0.022
+mouse          :            nan            nan            nan
+toilet seat cover dispenser:          0.851          0.856          0.857
+furniture      :          0.000          0.000          0.001
+cart           :          0.170          0.307          0.310
+storage container:            nan            nan            nan
+scale          :          1.000          1.000          1.000
+tissue box     :          0.023          0.027          0.054
+light switch   :            nan            nan            nan
+crate          :          0.328          0.335          0.365
+power outlet   :          1.000          1.000          1.000
+decoration     :          0.014          0.027          0.028
+sign           :          0.144          0.179          0.257
+projector      :          0.000          0.000          0.000
+closet door    :          0.008          0.022          0.133
+vacuum cleaner :          0.160          0.188          0.189
+candle         :            nan            nan            nan
+plunger        :          0.778          1.000          1.000
+stuffed animal :          0.000          0.000          0.000
+headphones     :          0.000          0.000          0.000
+dish rack      :          0.155          0.218          0.480
+broom          :          0.000          0.000          0.200
+guitar case    :            nan            nan            nan
+range hood     :          0.615          0.898          0.959
+dustpan        :          0.009          0.083          0.792
+hair dryer     :          0.000          0.000          0.034
+water bottle   :          0.002          0.003          0.004
+handicap bar   :          0.032          0.043          0.045
+purse          :            nan            nan            nan
+vent           :          0.006          0.006          0.007
+shower floor   :          1.000          1.000          1.000
+water pitcher  :          0.031          0.050          0.050
+mailbox        :          0.171          0.267          0.277
+bowl           :          0.022          0.038          0.045
+paper bag      :          0.005          0.016          0.016
+alarm clock    :            nan            nan            nan
+music stand    :            nan            nan            nan
+projector screen:          0.166          0.287          0.330
+divider        :          0.166          0.438          0.440
+laundry detergent:          0.002          0.002          0.002
+bathroom counter:          0.201          0.474          0.476
+object         :          0.042          0.057          0.073
+bathroom vanity:          0.416          0.597          0.627
+closet wall    :          0.026          0.101          0.121
+laundry hamper :          0.113          0.161          0.161
+bathroom stall door:          0.740          0.792          0.792
+ceiling light  :          0.584          0.756          0.796
+trash bin      :          0.161          0.191          0.241
+dumbbell       :          0.289          0.598          0.621
+stair rail     :          0.003          0.014          0.205
+tube           :          0.164          0.245          0.267
+bathroom cabinet:          0.143          0.207          0.304
+cd case        :            nan            nan            nan
+closet rod     :          0.500          1.000          1.000
+coffee kettle  :          0.000          0.000          0.008
+structure      :            nan            nan            nan
+shower head    :          0.490          0.606          0.606
+keyboard piano :          0.002          0.003          0.013
+case of water bottles:          0.000          0.000          0.000
+coat rack      :          0.002          0.015          0.017
+storage organizer:            nan            nan            nan
+folded chair   :          0.000          0.000          0.004
+fire alarm     :            nan            nan            nan
+power strip    :            nan            nan            nan
+calendar       :          0.000          0.000          0.000
+poster         :          0.000          0.000          0.000
+potted plant   :          0.149          0.250          0.250
+luggage        :            nan            nan            nan
+mattress       :          0.000          0.000          0.000
+----------------------------------------------------------------
+average        :          0.274          0.370          0.423
