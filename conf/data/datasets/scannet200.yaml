@@ -1,0 +1,73 @@
+# @package data
+train_dataset:
+  _target_: datasets.semseg.SemanticSegmentationDataset
+  data_dir: data/processed/scannet200
+  image_augmentations_path: conf/augmentation/albumentations_aug.yaml
+  volume_augmentations_path: conf/augmentation/volumentations_aug.yaml
+  label_db_filepath: data/processed/scannet200/label_database.yaml
+  color_mean_std: data/processed/scannet200/color_mean_std.yaml
+  data_percent: 1.0
+  mode: ${data.train_mode}
+  ignore_label: ${data.ignore_label}
+  num_labels: ${data.num_labels}
+  add_raw_coordinates: ${data.add_raw_coordinates}
+  add_colors: ${data.add_colors}
+  add_normals: ${data.add_normals}
+  add_instance: ${data.add_instance}
+  # different augs experiments
+  instance_oversampling: 0.0
+  place_around_existing: false
+  point_per_cut: 0
+  max_cut_region: 0
+  flip_in_center: false
+  noise_rate: 0
+  resample_points: 0
+  add_unlabeled_pc: false
+  cropping: ${data.cropping}
+  cropping_args: ${data.cropping_args}
+  is_tta: false
+  downsampling: ${general.downsampling}
+  crop_min_size: ${data.crop_min_size}
+  crop_length: ${data.crop_length}
+
+validation_dataset:
+  _target_: datasets.semseg.SemanticSegmentationDataset
+  data_dir: data/processed/scannet200
+  image_augmentations_path: null
+  volume_augmentations_path: null
+  label_db_filepath: data/processed/scannet200/label_database.yaml
+  color_mean_std: data/processed/scannet200/color_mean_std.yaml
+  data_percent: 1.0
+  mode: ${data.validation_mode}
+  ignore_label: ${data.ignore_label}
+  num_labels: ${data.num_labels}
+  add_raw_coordinates: ${data.add_raw_coordinates}
+  add_colors: ${data.add_colors}
+  add_normals: ${data.add_normals}
+  add_instance: ${data.add_instance}
+  cropping: false
+  is_tta: false
+  downsampling: ${general.downsampling}
+  crop_min_size: ${data.crop_min_size}
+  crop_length: ${data.crop_length}
+
+test_dataset:
+  _target_: datasets.semseg.SemanticSegmentationDataset
+  data_dir: data/processed/scannet200
+  image_augmentations_path: null
+  volume_augmentations_path: null
+  label_db_filepath: data/processed/scannet200/label_database.yaml
+  color_mean_std: data/processed/scannet200/color_mean_std.yaml
+  data_percent: 1.0
+  mode: ${data.test_mode}
+  ignore_label: ${data.ignore_label}
+  num_labels: ${data.num_labels}
+  add_raw_coordinates: ${data.add_raw_coordinates}
+  add_colors: ${data.add_colors}
+  add_normals: ${data.add_normals}
+  add_instance: ${data.add_instance}
+  cropping: false
+  is_tta: false
+  downsampling: ${general.downsampling}
+  crop_min_size: ${data.crop_min_size}
+  crop_length: ${data.crop_length}

@@ -1,0 +1,36 @@
+# @package data
+
+train_collation:
+  _target_: datasets.utils.VoxelizeCollateMerge
+  ignore_label: ${data.ignore_label}
+  voxel_size: ${data.voxel_size}
+  mode: ${data.train_mode}
+  small_crops: false
+  very_small_crops: false
+  scenes: 2
+  batch_instance: false
+  make_one_pc_noise: false
+  place_nearby: false
+  place_far: false
+  proba: 1
+  probing: ${general.linear_probing_backbone}
+  include_ignore: ${general.include_ignore}
+  task: ${general.task}
+
+validation_collation:
+  _target_: datasets.utils.VoxelizeCollate
+  ignore_label: ${data.ignore_label}
+  voxel_size: ${data.voxel_size}
+  mode: ${data.validation_mode}
+  probing: ${general.linear_probing_backbone}
+  include_ignore: ${general.include_ignore}
+  task: ${general.task}
+
+test_collation:
+  _target_: datasets.utils.VoxelizeCollate
+  ignore_label: ${data.ignore_label}
+  voxel_size: ${data.voxel_size}
+  mode: ${data.test_mode}
+  probing: ${general.linear_probing_backbone}
+  include_ignore: ${general.include_ignore}
+  task: ${general.task}

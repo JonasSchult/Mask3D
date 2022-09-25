@@ -1,0 +1,42 @@
+# @package data
+train_dataset:
+  _target_: mix3d.datasets.outdoor_semseg.LidarDataset
+  data_dir: data/processed/semantic_kitti
+  label_db_filepath: data/processed/semantic_kitti/label_database.yaml
+  mode: ${data.train_mode}
+  add_reflection: ${data.add_reflection}
+  add_distance: ${data.add_distance}
+  add_instance: ${data.add_instance}
+  num_labels: ${data.num_labels}
+  sweep: ${data.sweep}
+  data_percent: 1.0
+  ignore_label: ${data.ignore_label}
+  volume_augmentations_path: mix3d/conf/augmentation/volumentations_aug.yaml
+
+validation_dataset:
+  _target_: mix3d.datasets.outdoor_semseg.LidarDataset
+  data_dir: data/processed/semantic_kitti
+  label_db_filepath: data/processed/semantic_kitti/label_database.yaml
+  mode: ${data.validation_mode}
+  add_reflection: ${data.add_reflection}
+  add_distance: ${data.add_distance}
+  add_instance: ${data.add_instance}
+  num_labels: ${data.num_labels}
+  sweep: ${data.sweep}
+  data_percent: 1.0
+  ignore_label: ${data.ignore_label}
+  volume_augmentations_path: null
+
+test_dataset:
+  _target_: mix3d.datasets.outdoor_semseg.LidarDataset
+  data_dir: data/processed/semantic_kitti
+  label_db_filepath: data/processed/semantic_kitti/label_database.yaml
+  mode: ${data.test_mode}
+  add_reflection: ${data.add_reflection}
+  add_distance: ${data.add_distance}
+  add_instance: ${data.add_instance}
+  num_labels: ${data.num_labels}
+  sweep: ${data.sweep}
+  data_percent: 1.0
+  ignore_label: ${data.ignore_label}
+  volume_augmentations_path: null

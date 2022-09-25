@@ -1,0 +1,48 @@
+# @package data
+train_dataset:
+  _target_: mix3d.datasets.semseg.SemanticSegmentationDataset
+  data_dir: data/processed/matterport
+  image_augmentations_path: mix3d/conf/augmentation/albumentations_aug.yaml
+  volume_augmentations_path: mix3d/conf/augmentation/volumentations_aug.yaml
+  label_db_filepath: data/processed/matterport/label_database.yaml
+  color_mean_std: data/processed/scannet/color_mean_std.yaml
+  data_percent: 1.0
+  mode: ${data.train_mode}
+  ignore_label: ${data.ignore_label}
+  num_labels: ${data.num_labels}
+  add_raw_coordinates: ${data.add_raw_coordinates}
+  add_colors: ${data.add_colors}
+  add_normals: ${data.add_normals}
+  add_instance: ${data.add_instance}
+
+validation_dataset:
+  _target_: mix3d.datasets.semseg.SemanticSegmentationDataset
+  data_dir: data/processed/scannet
+  image_augmentations_path: null
+  volume_augmentations_path: null
+  label_db_filepath: data/processed/matterport/label_database.yaml
+  color_mean_std: data/processed/scannet/color_mean_std.yaml
+  data_percent: 1.0
+  mode: ${data.validation_mode}
+  ignore_label: ${data.ignore_label}
+  num_labels: ${data.num_labels}
+  add_raw_coordinates: ${data.add_raw_coordinates}
+  add_colors: ${data.add_colors}
+  add_normals: ${data.add_normals}
+  add_instance: ${data.add_instance}
+
+test_dataset:
+  _target_: mix3d.datasets.semseg.SemanticSegmentationDataset
+  data_dir: data/processed/matterport
+  image_augmentations_path: null
+  volume_augmentations_path: null
+  label_db_filepath: data/processed/matterport/label_database.yaml
+  color_mean_std: data/processed/scannet/color_mean_std.yaml
+  data_percent: 1.0
+  mode: ${data.test_mode}
+  ignore_label: ${data.ignore_label}
+  num_labels: ${data.num_labels}
+  add_raw_coordinates: ${data.add_raw_coordinates}
+  add_colors: ${data.add_colors}
+  add_normals: ${data.add_normals}
+  add_instance: ${data.add_instance}

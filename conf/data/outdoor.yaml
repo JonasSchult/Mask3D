@@ -1,0 +1,26 @@
+# @package _group_
+
+# these parameters are inherited by datasets, data_loaders and collators
+# but they might be overwritten
+
+# splits
+train_mode: train
+validation_mode: validation
+test_mode: validation
+
+# dataset
+ignore_label: 255
+add_distance: true # 1dim
+add_reflection: true # 1dim
+in_channels: 2 # in_channels = add_distance + add_reflection
+num_labels: 19
+add_instance: false
+
+# data loader
+pin_memory: true
+num_workers: 4
+batch_size: 18
+sweep: 1
+
+# collation
+voxel_size: 0.15

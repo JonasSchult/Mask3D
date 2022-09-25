@@ -1,0 +1,42 @@
+# @package data
+
+train_collation:
+  _target_: datasets.utils.VoxelizeCollate
+  ignore_label: ${data.ignore_label}
+  voxel_size: ${data.voxel_size}
+  mode: ${data.train_mode}
+  small_crops: false
+  very_small_crops: false
+  batch_instance: false
+  probing: ${general.linear_probing_backbone}
+  include_ignore: ${general.include_ignore}
+  task: ${general.task}
+  is_scannet: ${data.is_scannet}
+  ignore_class_threshold: ${general.ignore_class_threshold}
+  scannet200: ${general.scannet200}
+
+validation_collation:
+  _target_: datasets.utils.VoxelizeCollate
+  ignore_label: ${data.ignore_label}
+  voxel_size: ${data.voxel_size}
+  mode: ${data.validation_mode}
+  batch_instance: false
+  probing: ${general.linear_probing_backbone}
+  include_ignore: ${general.include_ignore}
+  task: ${general.task}
+  is_scannet: ${data.is_scannet}
+  ignore_class_threshold: ${general.ignore_class_threshold}
+  scannet200: ${general.scannet200}
+
+test_collation:
+  _target_: datasets.utils.VoxelizeCollate
+  ignore_label: ${data.ignore_label}
+  voxel_size: ${data.voxel_size}
+  mode: ${data.test_mode}
+  batch_instance: false
+  probing: ${general.linear_probing_backbone}
+  include_ignore: ${general.include_ignore}
+  task: ${general.task}
+  is_scannet: ${data.is_scannet}
+  ignore_class_threshold: ${general.ignore_class_threshold}
+  scannet200: ${general.scannet200}

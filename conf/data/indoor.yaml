@@ -1,0 +1,44 @@
+# @package _group_
+
+# these parameters are inherited by datasets, data_loaders and collators
+# but they might be overwritten
+
+# splits
+train_mode: train
+validation_mode: validation
+test_mode: validation # test  # validation
+
+# dataset
+ignore_label: 255
+add_raw_coordinates: true # 3dim
+add_colors: true # 3dim
+add_normals: false # 3dim
+in_channels: 3 # in_channels = 3 * (add_normals + add_colors + add_raw_coordinates)
+num_labels: 20
+# num_labels: 41
+add_instance: ${general.add_instance}
+task: ${general.task}
+
+# data loader
+pin_memory: false
+num_workers: 4
+batch_size: 5
+test_batch_size: 1
+cache_data: false
+
+# collation
+voxel_size: 0.02
+
+reps_per_epoch: ${general.reps_per_epoch}
+
+is_scannet: true
+cropping: false
+cropping_args:
+  min_points: 30000
+  aspect: 0.8
+  min_crop: 0.5
+  max_crop: 1.0
+
+crop_min_size: 20000
+crop_length: 6.0
+cropping_v1: true
