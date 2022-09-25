@@ -3,6 +3,8 @@
 /data
 /eval_output
 
+*.out
+
 
 
 

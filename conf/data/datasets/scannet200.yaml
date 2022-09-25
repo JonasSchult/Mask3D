@@ -1,6 +1,7 @@
 # @package data
 train_dataset:
   _target_: datasets.semseg.SemanticSegmentationDataset
+  dataset_name: "scannet200"
   data_dir: data/processed/scannet200
   image_augmentations_path: conf/augmentation/albumentations_aug.yaml
   volume_augmentations_path: conf/augmentation/volumentations_aug.yaml
@@ -26,12 +27,14 @@ train_dataset:
   cropping: ${data.cropping}
   cropping_args: ${data.cropping_args}
   is_tta: false
-  downsampling: ${general.downsampling}
   crop_min_size: ${data.crop_min_size}
   crop_length: ${data.crop_length}
+  filter_out_classes: [0, 2]
+  label_offset: 2
 
 validation_dataset:
   _target_: datasets.semseg.SemanticSegmentationDataset
+  dataset_name: "scannet200"
   data_dir: data/processed/scannet200
   image_augmentations_path: null
   volume_augmentations_path: null
@@ -47,12 +50,14 @@ validation_dataset:
   add_instance: ${data.add_instance}
   cropping: false
   is_tta: false
-  downsampling: ${general.downsampling}
   crop_min_size: ${data.crop_min_size}
   crop_length: ${data.crop_length}
+  filter_out_classes: [0, 2]
+  label_offset: 2
 
 test_dataset:
   _target_: datasets.semseg.SemanticSegmentationDataset
+  dataset_name: "scannet200"
   data_dir: data/processed/scannet200
   image_augmentations_path: null
   volume_augmentations_path: null
@@ -68,6 +73,7 @@ test_dataset:
   add_instance: ${data.add_instance}
   cropping: false
   is_tta: false
-  downsampling: ${general.downsampling}
   crop_min_size: ${data.crop_min_size}
   crop_length: ${data.crop_length}
+  filter_out_classes: [0, 2]
+  label_offset: 2

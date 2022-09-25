@@ -1,12 +1,12 @@
 # @package data
 train_dataset:
   _target_: datasets.semseg.SemanticSegmentationDataset
-  dataset_name: "s3dis"
-  data_dir: data/processed/s3dis
+  dataset_name: "stpls3d"
+  data_dir: data/processed/stpls3d
   image_augmentations_path: conf/augmentation/albumentations_aug.yaml
   volume_augmentations_path: conf/augmentation/volumentations_aug.yaml
-  label_db_filepath: data/processed/s3dis/label_database.yaml
-  color_mean_std: data/processed/s3dis/color_mean_std.yaml
+  label_db_filepath: data/processed/stpls3d/label_database.yaml
+  color_mean_std: data/processed/stpls3d/color_mean_std.yaml
   data_percent: 1.0
   mode: ${data.train_mode}
   ignore_label: ${data.ignore_label}
@@ -31,17 +31,21 @@ train_dataset:
   crop_length: ${data.crop_length}
   cropping_v1: ${data.cropping_v1}
   area: ${general.area}
-  filter_out_classes: []
-  label_offset: 0
+  reps_per_epoch: ${general.reps_per_epoch}
+  eval_inner_core: ${general.eval_inner_core}
+  filter_out_classes: [0]
+  label_offset: 1
+  is_elastic_distortion: true
+  color_drop: 0.0
 
 validation_dataset:
   _target_: datasets.semseg.SemanticSegmentationDataset
-  dataset_name: "s3dis"
-  data_dir: data/processed/s3dis
+  dataset_name: "stpls3d"
+  data_dir: data/processed/stpls3d
   image_augmentations_path: null
   volume_augmentations_path: null
-  label_db_filepath: data/processed/s3dis/label_database.yaml
-  color_mean_std: data/processed/s3dis/color_mean_std.yaml
+  label_db_filepath: data/processed/stpls3d/label_database.yaml
+  color_mean_std: data/processed/stpls3d/color_mean_std.yaml
   data_percent: 1.0
   mode: ${data.validation_mode}
   ignore_label: ${data.ignore_label}
@@ -57,17 +61,19 @@ validation_dataset:
   crop_length: ${data.crop_length}
   cropping_v1: ${data.cropping_v1}
   area: ${general.area}
-  filter_out_classes: []
-  label_offset: 0
+  on_crops: ${general.on_crops}
+  eval_inner_core: ${general.eval_inner_core}
+  filter_out_classes: [0]
+  label_offset: 1
 
 test_dataset:
   _target_: datasets.semseg.SemanticSegmentationDataset
-  dataset_name: "s3dis"
-  data_dir: data/processed/s3dis
+  dataset_name: "stpls3d"
+  data_dir: data/processed/stpls3d
   image_augmentations_path: null
   volume_augmentations_path: null
-  label_db_filepath: data/processed/s3dis/label_database.yaml
-  color_mean_std: data/processed/s3dis/color_mean_std.yaml
+  label_db_filepath: data/processed/stpls3d/label_database.yaml
+  color_mean_std: data/processed/stpls3d/color_mean_std.yaml
   data_percent: 1.0
   mode: ${data.test_mode}
   ignore_label: ${data.ignore_label}
@@ -83,5 +89,7 @@ test_dataset:
   crop_length: ${data.crop_length}
   cropping_v1: ${data.cropping_v1}
   area: ${general.area}
-  filter_out_classes: []
-  label_offset: 0
+  on_crops: ${general.on_crops}
+  eval_inner_core: ${general.eval_inner_core}
+  filter_out_classes: [0]
+  label_offset: 1

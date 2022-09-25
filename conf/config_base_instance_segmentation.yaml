@@ -1,6 +1,4 @@
 general:
-  scannet200: false
-
   train_mode: true
   task: "instance_segmentation"
   seed: null
@@ -9,7 +7,6 @@ general:
   freeze_backbone: false # train only last layer
   linear_probing_backbone: false
   train_on_segments: false
-  include_ignore: true
   eval_on_segments: false
   filter_out_instances: false
   save_visualizations: false
@@ -26,6 +23,7 @@ general:
   dbscan_eps: 0.95
   dbscan_min_points: 1
 
+
   export_threshold: 0.0001
 
   reps_per_epoch: 1
@@ -36,6 +34,8 @@ general:
   iou_threshold: 1.0
 
   area: 5
+
+  eval_inner_core: -1 # disabled
 
   topk_per_image: 100
 

@@ -1,6 +1,7 @@
 # @package data
 train_dataset:
   _target_: datasets.semseg.SemanticSegmentationDataset
+  dataset_name: "scannet"
   data_dir: data/processed/scannet
   image_augmentations_path: conf/augmentation/albumentations_aug.yaml
   volume_augmentations_path: conf/augmentation/volumentations_aug.yaml
@@ -28,9 +29,12 @@ train_dataset:
   is_tta: false
   crop_min_size: ${data.crop_min_size}
   crop_length: ${data.crop_length}
+  filter_out_classes: [0, 1]
+  label_offset: 2
 
 validation_dataset:
   _target_: datasets.semseg.SemanticSegmentationDataset
+  dataset_name: "scannet"
   data_dir: data/processed/scannet
   image_augmentations_path: null
   volume_augmentations_path: null
@@ -48,9 +52,12 @@ validation_dataset:
   is_tta: false
   crop_min_size: ${data.crop_min_size}
   crop_length: ${data.crop_length}
+  filter_out_classes: [0, 1]
+  label_offset: 2
 
 test_dataset:
   _target_: datasets.semseg.SemanticSegmentationDataset
+  dataset_name: "scannet"
   data_dir: data/processed/scannet
   image_augmentations_path: null
   volume_augmentations_path: null
@@ -68,3 +75,5 @@ test_dataset:
   is_tta: false
   crop_min_size: ${data.crop_min_size}
   crop_length: ${data.crop_length}
+  filter_out_classes: [0, 1]
+  label_offset: 2

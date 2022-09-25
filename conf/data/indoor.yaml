@@ -31,7 +31,6 @@ voxel_size: 0.02
 
 reps_per_epoch: ${general.reps_per_epoch}
 
-is_scannet: true
 cropping: false
 cropping_args:
   min_points: 30000

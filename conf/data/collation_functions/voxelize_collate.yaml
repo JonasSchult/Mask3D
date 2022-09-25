@@ -9,11 +9,11 @@ train_collation:
   very_small_crops: false
   batch_instance: false
   probing: ${general.linear_probing_backbone}
-  include_ignore: ${general.include_ignore}
   task: ${general.task}
-  is_scannet: ${data.is_scannet}
   ignore_class_threshold: ${general.ignore_class_threshold}
-  scannet200: ${general.scannet200}
+  filter_out_classes: ${data.train_dataset.filter_out_classes}
+  label_offset: ${data.train_dataset.label_offset}
+  num_queries: ${model.num_queries}
 
 validation_collation:
   _target_: datasets.utils.VoxelizeCollate
@@ -22,11 +22,11 @@ validation_collation:
   mode: ${data.validation_mode}
   batch_instance: false
   probing: ${general.linear_probing_backbone}
-  include_ignore: ${general.include_ignore}
   task: ${general.task}
-  is_scannet: ${data.is_scannet}
   ignore_class_threshold: ${general.ignore_class_threshold}
-  scannet200: ${general.scannet200}
+  filter_out_classes: ${data.validation_dataset.filter_out_classes}
+  label_offset: ${data.validation_dataset.label_offset}
+  num_queries: ${model.num_queries}
 
 test_collation:
   _target_: datasets.utils.VoxelizeCollate
@@ -35,8 +35,8 @@ test_collation:
   mode: ${data.test_mode}
   batch_instance: false
   probing: ${general.linear_probing_backbone}
-  include_ignore: ${general.include_ignore}
   task: ${general.task}
-  is_scannet: ${data.is_scannet}
   ignore_class_threshold: ${general.ignore_class_threshold}
-  scannet200: ${general.scannet200}
+  filter_out_classes: ${data.test_dataset.filter_out_classes}
+  label_offset: ${data.test_dataset.label_offset}
+  num_queries: ${model.num_queries}

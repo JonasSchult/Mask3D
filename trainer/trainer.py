@@ -12,7 +12,6 @@ from benchmark.evaluate_semantic_instance import evaluate
 from collections import defaultdict
 from sklearn.cluster import DBSCAN
 from utils.votenet_utils.eval_det import eval_det
-from datasets.scannet200.scannet200_constants import SCANNET_COLOR_MAP_200
 from datasets.scannet200.scannet200_splits import HEAD_CATS_SCANNET_200, TAIL_CATS_SCANNET_200, COMMON_CATS_SCANNET_200, VALID_CLASS_IDS_200_VALIDATION
 
 import hydra
@@ -101,6 +100,10 @@ class InstanceSegmentation(pl.LightningModule):
             print("data exceeds threshold")
             raise RuntimeError("BATCH TOO BIG")
 
+        if len(target) == 0:
+            print("no targets")
+            return None
+
         raw_coordinates = None
         if self.config.data.add_raw_coordinates:
             raw_coordinates = data.features[:, -3:]
@@ -110,11 +113,28 @@ class InstanceSegmentation(pl.LightningModule):
                               features=data.features,
                               device=self.device)
 
-        output = self.forward(data,
-                              point2segment=[target[i]['point2segment'] for i in range(len(target))],
-                              raw_coordinates=raw_coordinates)
+        try:
+            output = self.forward(data,
+                                  point2segment=[target[i]['point2segment'] for i in range(len(target))],
+                                  raw_coordinates=raw_coordinates)
+        except RuntimeError as run_err:
+            print(run_err)
+            if 'only a single point gives nans in cross-attention' == run_err.args[0]:
+                return None
+            else:
+                raise run_err
 
-        losses = self.criterion(output, target, mask_type=self.mask_type)
+        try:
+            losses = self.criterion(output, target, mask_type=self.mask_type)
+        except ValueError as val_err:
+            print(f"ValueError: {val_err}")
+            print(f"data shape: {data.shape}")
+            print(f"data feat shape:  {data.features.shape}")
+            print(f"data feat nans:   {data.features.isnan().sum()}")
+            print(f"output: {output}")
+            print(f"target: {target}")
+            print(f"filenames: {file_names}")
+            raise val_err
 
         for k in list(losses.keys()):
             if k in self.criterion.weight_dict:
@@ -170,93 +190,58 @@ class InstanceSegmentation(pl.LightningModule):
 
     def save_visualizations(self, target_full, full_res_coords,
                             sorted_masks, sort_classes, file_name, original_colors, original_normals,
-                            sort_scores_values, rel_path="", point_size=20, sorted_heatmaps=None,
+                            sort_scores_values, point_size=20, sorted_heatmaps=None,
                             query_pos=None, backbone_features=None):
+
+        full_res_coords -= full_res_coords.mean(axis=0)
+
         gt_pcd_pos = []
         gt_pcd_normals = []
         gt_pcd_color = []
+        gt_inst_pcd_color = []
         gt_boxes = []
-
-        cmap = matplotlib.cm.get_cmap('hot')
-
-        label_color_gt = np.ones_like(full_res_coords) * 255
-        label_color_pred = np.ones_like(full_res_coords) * 255
-        sem_label_color_pred = np.ones_like(full_res_coords) * 255
-
 
         if 'labels' in target_full:
             instances_colors = torch.from_numpy(
-                np.vstack(get_evenly_distributed_colors(sum(target_full['labels'] != 253))))
-            instance_counter = -1
-            for i, (label, mask) in enumerate(zip(target_full['labels'], target_full['masks'])):
-                if label == 253:
-                    label = -2
-                else:
-                    instance_counter += 1
-                mask_tmp = mask.detach().cpu().numpy()
+                np.vstack(get_evenly_distributed_colors(target_full['labels'].shape[0])))
+            for instance_counter, (label, mask) in enumerate(zip(target_full['labels'], target_full['masks'])):
+                if label == 255:
+                    continue
 
+                mask_tmp = mask.detach().cpu().numpy()
                 mask_coords = full_res_coords[mask_tmp.astype(bool), :]
+
+                if len(mask_coords) == 0:
+                    continue
+
                 gt_pcd_pos.append(mask_coords)
                 mask_coords_min = full_res_coords[mask_tmp.astype(bool), :].min(axis=0)
                 mask_coords_max = full_res_coords[mask_tmp.astype(bool), :].max(axis=0)
                 size = mask_coords_max - mask_coords_min
                 mask_coords_middle = mask_coords_min + size / 2
 
+                gt_boxes.append({"position": mask_coords_middle, "size": size,
+                                 "color": self.validation_dataset.map2color([label])[0]})
 
-                if self.config.general.scannet200:
-                    gt_boxes.append({"position": mask_coords_middle, "size": size,
-                                     "color": torch.FloatTensor(
-                                         SCANNET_COLOR_MAP_200[self.validation_dataset._remap_model_output(label + 2).item()])
-                                     if self.config.data.is_scannet
-                                                else self.validation_dataset.color_map[label]})
-                    gt_pcd_color.append(
-                        torch.FloatTensor(
-                            SCANNET_COLOR_MAP_200[self.validation_dataset._remap_model_output(label + 2).item()]
-                        ).unsqueeze(0).repeat(gt_pcd_pos[-1].shape[0], 1)
-                        if self.config.data.is_scannet
-                        else self.validation_dataset.color_map[label].unsqueeze(0).repeat(gt_pcd_pos[-1].shape[0], 1)
-                    )
-                else:
-                    gt_boxes.append({"position": mask_coords_middle, "size": size,
-                                     "color": self.validation_dataset.color_map[label + 3] if self.config.data.is_scannet
-                                                else self.validation_dataset.color_map[label]})
-                    gt_pcd_color.append(
-                        self.validation_dataset.color_map[label + 3].unsqueeze(0).repeat(gt_pcd_pos[-1].shape[0], 1)
-                        if self.config.data.is_scannet
-                        else self.validation_dataset.color_map[label].unsqueeze(0).repeat(gt_pcd_pos[-1].shape[0], 1)
-                    )
+                gt_pcd_color.append(
+                    self.validation_dataset.map2color([label]).repeat(gt_pcd_pos[-1].shape[0], 1)
+                )
+                gt_inst_pcd_color.append(instances_colors[instance_counter % len(instances_colors)].unsqueeze(0).repeat(gt_pcd_pos[-1].shape[0], 1))
 
                 gt_pcd_normals.append(original_normals[mask_tmp.astype(bool), :])
-
-                if label != -2:
-                    label_color_gt[mask_tmp.astype(bool), :] = instances_colors[instance_counter].unsqueeze(0).repeat(gt_pcd_pos[-1].shape[0], 1)
-
 
             gt_pcd_pos = np.concatenate(gt_pcd_pos)
             gt_pcd_normals = np.concatenate(gt_pcd_normals)
             gt_pcd_color = np.concatenate(gt_pcd_color)
+            gt_inst_pcd_color = np.concatenate(gt_inst_pcd_color)
 
         v = vis.Visualizer()
 
-        v.add_points("COLOR", full_res_coords,
+        v.add_points("RGB Input", full_res_coords,
                      colors=original_colors,
                      normals=original_normals,
-                     visible=False,
+                     visible=True,
                      point_size=point_size)
-
-        v.add_points("ALL_GT_INSTANCES", full_res_coords,
-                     colors=label_color_gt,
-                     normals=original_normals,
-                     visible=False,
-                     point_size=point_size)
-
-        if 'labels' in target_full:
-            v.add_points("GT_SEMANTICS", gt_pcd_pos,
-                         colors=gt_pcd_color,
-                         normals=gt_pcd_normals,
-                         alpha=0.8,
-                         visible=False,
-                         point_size=point_size)
 
         if backbone_features is not None:
             v.add_points("PCA", full_res_coords,
@@ -265,7 +250,24 @@ class InstanceSegmentation(pl.LightningModule):
                          visible=False,
                          point_size=point_size)
 
-        segment_colors = np.vstack(get_evenly_distributed_colors(target_full['point2segment'].max() + 1))
+        if 'labels' in target_full:
+            v.add_points("Semantics (GT)", gt_pcd_pos,
+                         colors=gt_pcd_color,
+                         normals=gt_pcd_normals,
+                         alpha=0.8,
+                         visible=False,
+                         point_size=point_size)
+            v.add_points("Instances (GT)", gt_pcd_pos,
+                         colors=gt_inst_pcd_color,
+                         normals=gt_pcd_normals,
+                         alpha=0.8,
+                         visible=False,
+                         point_size=point_size)
+
+        pred_coords = []
+        pred_normals = []
+        pred_sem_color = []
+        pred_inst_color = []
 
         for did in range(len(sorted_masks)):
             instances_colors = torch.from_numpy(
@@ -274,65 +276,46 @@ class InstanceSegmentation(pl.LightningModule):
             for i in reversed(range(sorted_masks[did].shape[1])):
                 coords = full_res_coords[sorted_masks[did][:, i].astype(bool), :]
 
-                if self.config.general.scannet200:
-                    v.add_points(f"DECODER_{did}:{i}_score_{sort_scores_values[did][i]}",
-                                 full_res_coords[sorted_masks[did][:, i].astype(bool), :],
-                                 visible=False, alpha=0.8,
-                                 normals=original_normals[sorted_masks[did][:, i].astype(bool), :],
-                                 colors=torch.FloatTensor(
-                            SCANNET_COLOR_MAP_200[self.validation_dataset._remap_model_output(sort_classes[did][i].cpu() + 2).item()]
-                        ).unsqueeze(0).repeat(
-                                     coords.shape[0], 1).detach().cpu().numpy() if self.config.data.is_scannet
-                                 else self.validation_dataset.color_map[sort_classes[did][i]].unsqueeze(0).repeat(
-                                     coords.shape[0], 1).detach().cpu().numpy(),
-                                 point_size=point_size)
+                mask_coords = full_res_coords[sorted_masks[did][:,i].astype(bool), :]
+                mask_normals = original_normals[sorted_masks[did][:,i].astype(bool), :]
 
-                    sem_label_color_pred[sorted_masks[did][:, i].astype(bool), :] = torch.FloatTensor(
-                            SCANNET_COLOR_MAP_200[self.validation_dataset._remap_model_output(sort_classes[did][i].cpu() + 2).item()]
-                        ).unsqueeze(0).repeat(sorted_masks[did][:, i].astype(bool).sum(), 1)
-                else:
-                    v.add_points(f"DECODER_{did}:{i}_score_{sort_scores_values[did][i]}",
-                                 full_res_coords[sorted_masks[did][:, i].astype(bool), :],
-                                 visible=False, alpha=0.8,
-                                 normals=original_normals[sorted_masks[did][:, i].astype(bool), :],
-                                 colors=self.validation_dataset.color_map[sort_classes[did][i] + 2].unsqueeze(0).repeat(
-                                     coords.shape[0], 1).detach().cpu().numpy() if self.config.data.is_scannet
-                                     else self.validation_dataset.color_map[sort_classes[did][i]].unsqueeze(0).repeat(
-                                     coords.shape[0], 1).detach().cpu().numpy(),
-                                 point_size=point_size)
+                label = sort_classes[did][i]
 
-                    sem_label_color_pred[sorted_masks[did][:, i].astype(bool), :] = self.validation_dataset.color_map[sort_classes[did][i] + 3].unsqueeze(0).repeat(sorted_masks[did][:, i].astype(bool).sum(), 1)
+                if len(mask_coords) == 0:
+                    continue
 
-                label_color_pred[sorted_masks[did][:, i].astype(bool), :] = instances_colors[i % len(instances_colors)].unsqueeze(0).repeat(
-                    sorted_masks[did][:, i].astype(bool).sum(), 1)
+                pred_coords.append(mask_coords)
+                pred_normals.append(mask_normals)
 
-                if query_pos is not None:
-                    v.add_points(f"QUERY;{i}_query",
-                                 query_pos[i][None, ...],
-                                 visible=False, alpha=1.0,
-                                 point_size=10*point_size,
-                                 colors=np.array([[255., 0., 0.]]))
+                pred_sem_color.append(
+                    self.validation_dataset.map2color([label]).repeat(
+                        mask_coords.shape[0], 1)
+                )
 
-                sorted_heatmaps[did][:, i][sorted_heatmaps[did][:, i] == 0.5] = 0.
+                pred_inst_color.append(instances_colors[i % len(instances_colors)].unsqueeze(0).repeat(
+                    mask_coords.shape[0], 1)
+                )
 
-                v.add_points(f"HEATMAPS_{did}:{i}_score_{sort_scores_values[did][i]}",
-                             full_res_coords[sorted_heatmaps[did][:, i] != 0.],
-                             visible=False, alpha=0.8,
-                             normals=original_normals[sorted_heatmaps[did][:, i] != 0.],
-                             colors=cmap(1-0.9*sorted_heatmaps[did][:,i][sorted_heatmaps[did][:, i] != 0.])[:,:-1]*255,#cmap(sorted_heatmaps[did][:,i])[:,:-1]*255,
+            if len(pred_coords) > 0:
+                pred_coords = np.concatenate(pred_coords)
+                pred_normals = np.concatenate(pred_normals)
+                pred_sem_color = np.concatenate(pred_sem_color)
+                pred_inst_color = np.concatenate(pred_inst_color)
+
+                v.add_points("Semantics (Mask3D)", pred_coords,
+                             colors=pred_sem_color,
+                             normals=pred_normals,
+                             visible=False,
+                             alpha=0.8,
                              point_size=point_size)
-            v.add_points("ALL_PRED_INSTANCES", full_res_coords,
-                         colors=label_color_pred,
-                         normals=original_normals,
-                         visible=False,
-                         point_size=point_size)
-            v.add_points("ALL_PRED_SEM", full_res_coords,
-                         colors=sem_label_color_pred,
-                         normals=original_normals,
-                         visible=False,
-                         point_size=point_size)
+                v.add_points("Instances (Mask3D)", pred_coords,
+                             colors=pred_inst_color,
+                             normals=pred_normals,
+                             visible=False,
+                             alpha=0.8,
+                             point_size=point_size)
 
-        v.save(f"{self.config['general']['save_dir']}/visualizations/{rel_path}/{file_name}")
+        v.save(f"{self.config['general']['save_dir']}/visualizations/{file_name}")
 
     def eval_step(self, batch, batch_idx):
         data, target, file_names = batch
@@ -343,22 +326,52 @@ class InstanceSegmentation(pl.LightningModule):
         original_normals = data.original_normals
         original_coordinates = data.original_coordinates
 
+        #if len(target) == 0 or len(target_full) == 0:
+        #    print("no targets")
+        #    return None
+
+        if len(data.coordinates) == 0:
+            return 0.
+
         raw_coordinates = None
         if self.config.data.add_raw_coordinates:
             raw_coordinates = data.features[:, -3:]
             data.features = data.features[:, :-3]
 
+        if raw_coordinates.shape[0] == 0:
+            return 0.
+
         data = ME.SparseTensor(coordinates=data.coordinates, features=data.features, device=self.device)
-        output = self.forward(data,
-                              point2segment=[target[i]['point2segment'] for i in range(len(target))],
-                              raw_coordinates=raw_coordinates,
-                              is_eval=True)
+
+
+        try:
+            output = self.forward(data,
+                                  point2segment=[target[i]['point2segment'] for i in range(len(target))],
+                                  raw_coordinates=raw_coordinates,
+                                  is_eval=True)
+        except RuntimeError as run_err:
+            print(run_err)
+            if 'only a single point gives nans in cross-attention' == run_err.args[0]:
+                return None
+            else:
+                raise run_err
 
         if self.config.data.test_mode != "test":
             if self.config.trainer.deterministic:
                 torch.use_deterministic_algorithms(False)
-            losses = self.criterion(output, target,
-                                    mask_type=self.mask_type)
+
+            try:
+                losses = self.criterion(output, target,
+                                        mask_type=self.mask_type)
+            except ValueError as val_err:
+                print(f"ValueError: {val_err}")
+                print(f"data shape: {data.shape}")
+                print(f"data feat shape:  {data.features.shape}")
+                print(f"data feat nans:   {data.features.isnan().sum()}")
+                print(f"output: {output}")
+                print(f"target: {target}")
+                print(f"filenames: {file_names}")
+                raise val_err
 
             for k in list(losses.keys()):
                 if k in self.criterion.weight_dict:
@@ -426,12 +439,7 @@ class InstanceSegmentation(pl.LightningModule):
     def eval_instance_step(self, output, target_low_res, target_full_res, inverse_maps, file_names,
                            full_res_coords, original_colors, original_normals, raw_coords, idx, first_full_res=False,
                            backbone_features=None,):
-
-        if self.config.data.is_scannet:
-            label_offset = 2
-        if not self.config.data.is_scannet:
-            label_offset = 0
-
+        label_offset = self.validation_dataset.label_offset
         prediction = output['aux_outputs']
         prediction.append({
             'pred_logits': output['pred_logits'],
@@ -566,13 +574,18 @@ class InstanceSegmentation(pl.LightningModule):
                 all_pred_scores.append(sort_scores_values)
                 all_heatmaps.append(sorted_heatmap)
 
-        if self.config.general.scannet200:
+        if self.validation_dataset.dataset_name == "scannet200":
             all_pred_classes[bid][all_pred_classes[bid] == 0] = -1
             if self.config.data.test_mode != "test":
                 target_full_res[bid]['labels'][target_full_res[bid]['labels'] == 0] = -1
 
         for bid in range(len(prediction[self.decoder_id]['pred_masks'])):
-            if self.config.data.test_mode != "test":
+            all_pred_classes[bid] = self.validation_dataset._remap_model_output(all_pred_classes[bid].cpu() + label_offset)
+
+            if self.config.data.test_mode != "test" and len(target_full_res) != 0:
+                target_full_res[bid]['labels'] = self.validation_dataset._remap_model_output(
+                    target_full_res[bid]['labels'].cpu() + label_offset)
+
                 # PREDICTION BOX
                 bbox_data = []
                 for query_id in range(all_pred_masks[bid].shape[1]):  # self.model.num_queries
@@ -583,20 +596,15 @@ class InstanceSegmentation(pl.LightningModule):
 
                         bbox = np.concatenate((obj_center, obj_axis_length))
 
-                        bbox_data.append((
-                            self.validation_dataset._remap_model_output(all_pred_classes[bid][query_id].cpu() + 2
-                                                                        if self.config.data.is_scannet
-                                                                        else all_pred_classes[bid][query_id].cpu()).item(),
-                            bbox,
-                            all_pred_scores[bid][query_id]
+                        bbox_data.append((all_pred_classes[bid][query_id].item(), bbox,
+                                          all_pred_scores[bid][query_id]
                         ))
                 self.bbox_preds[file_names[bid]] = bbox_data
 
                 # GT BOX
                 bbox_data = []
                 for obj_id in range(target_full_res[bid]['masks'].shape[0]):
-                    if self.validation_dataset._remap_model_output(
-                            target_full_res[bid]['labels'][obj_id].cpu() + label_offset).item() == 255:
+                    if target_full_res[bid]['labels'][obj_id].item() == 255:
                         continue
 
                     obj_coords = full_res_coords[bid][target_full_res[bid]['masks'][obj_id, :].cpu().detach().numpy().astype(bool), :]
@@ -605,43 +613,74 @@ class InstanceSegmentation(pl.LightningModule):
                         obj_axis_length = obj_coords.max(axis=0) - obj_coords.min(axis=0)
 
                         bbox = np.concatenate((obj_center, obj_axis_length))
-                        bbox_data.append((
-                            self.validation_dataset._remap_model_output(
-                                target_full_res[bid]['labels'][obj_id].cpu() + label_offset).item(),
-                            bbox,
-                        ))
+                        bbox_data.append((target_full_res[bid]['labels'][obj_id].item(), bbox))
 
                 self.bbox_gt[file_names[bid]] = bbox_data
 
-            self.preds[file_names[bid]] = {
-                'pred_masks': all_pred_masks[bid][:, all_pred_scores[bid] > self.config.general.scores_threshold],
-                'pred_scores': all_pred_scores[bid][all_pred_scores[bid] > self.config.general.scores_threshold],
-                'pred_classes': self.validation_dataset._remap_model_output(all_pred_classes[bid].cpu() + label_offset)[all_pred_scores[bid] > self.config.general.scores_threshold]
-            }
+            if self.config.general.eval_inner_core == -1:
+                self.preds[file_names[bid]] = {
+                    'pred_masks': all_pred_masks[bid],
+                    'pred_scores': all_pred_scores[bid],
+                    'pred_classes': all_pred_classes[bid]
+                }
+            else:
+                # prev val_dataset
+                self.preds[file_names[bid]] = {
+                    'pred_masks': all_pred_masks[bid][self.test_dataset.data[idx[bid]]['cond_inner']],
+                    'pred_scores': all_pred_scores[bid],
+                    'pred_classes': all_pred_classes[bid]
+                }
 
             if self.config.general.save_visualizations:
-                self.save_visualizations(target_full_res[bid],
-                                         full_res_coords[bid],
-                                         [self.preds[file_names[bid]]['pred_masks']],
-                                         [all_pred_classes[bid].cpu()],
-                                         file_names[bid],
-                                         original_colors[bid],
-                                         original_normals[bid],
-                                         [self.preds[file_names[bid]]['pred_scores']],
-                                         sorted_heatmaps=[all_heatmaps[bid]],
-                                         query_pos=all_query_pos[bid] if len(all_query_pos) > 0 else None,
-                                         rel_path="test",
-                                         backbone_features=backbone_features,
-                                         point_size=self.config.general.visualization_point_size)
+                if 'cond_inner' in self.test_dataset.data[idx[bid]]:
+                    target_full_res[bid]['masks'] = target_full_res[bid]['masks'][:, self.test_dataset.data[idx[bid]]['cond_inner']]
+                    self.save_visualizations(target_full_res[bid],
+                                             full_res_coords[bid][self.test_dataset.data[idx[bid]]['cond_inner']],
+                                             [self.preds[file_names[bid]]['pred_masks']],
+                                             [self.preds[file_names[bid]]['pred_classes']],
+                                             file_names[bid],
+                                             original_colors[bid][self.test_dataset.data[idx[bid]]['cond_inner']],
+                                             original_normals[bid][self.test_dataset.data[idx[bid]]['cond_inner']],
+                                             [self.preds[file_names[bid]]['pred_scores']],
+                                             sorted_heatmaps=[all_heatmaps[bid][self.test_dataset.data[idx[bid]]['cond_inner']]],
+                                             query_pos=all_query_pos[bid][self.test_dataset.data[idx[bid]]['cond_inner']] if len(all_query_pos) > 0 else None,
+                                             backbone_features=backbone_features[self.test_dataset.data[idx[bid]]['cond_inner']],
+                                             point_size=self.config.general.visualization_point_size)
+                else:
+                    self.save_visualizations(target_full_res[bid],
+                                             full_res_coords[bid],
+                                             [self.preds[file_names[bid]]['pred_masks']],
+                                             [self.preds[file_names[bid]]['pred_classes']],
+                                             file_names[bid],
+                                             original_colors[bid],
+                                             original_normals[bid],
+                                             [self.preds[file_names[bid]]['pred_scores']],
+                                             sorted_heatmaps=[all_heatmaps[bid]],
+                                             query_pos=all_query_pos[bid] if len(all_query_pos) > 0 else None,
+                                             backbone_features=backbone_features,
+                                             point_size=self.config.general.visualization_point_size)
 
             if self.config.general.export:
-                self.export(
-                    self.preds[file_names[bid]]['pred_masks'],
-                    self.preds[file_names[bid]]['pred_scores'],
-                    self.preds[file_names[bid]]['pred_classes'],
-                    file_names[bid],  # file_name
-                    self.decoder_id
-                )
+                if self.validation_dataset.dataset_name == "stpls3d":
+                    scan_id, _, _, crop_id = file_names[bid].split("_")
+                    crop_id = int(crop_id.replace(".txt", ""))
+                    file_name = f"{scan_id}_points_GTv3_0{crop_id}_inst_nostuff"
+
+                    self.export(
+                        self.preds[file_names[bid]]['pred_masks'],
+                        self.preds[file_names[bid]]['pred_scores'],
+                        self.preds[file_names[bid]]['pred_classes'],
+                        file_name,
+                        self.decoder_id
+                    )
+                else:
+                    self.export(
+                        self.preds[file_names[bid]]['pred_masks'],
+                        self.preds[file_names[bid]]['pred_scores'],
+                        self.preds[file_names[bid]]['pred_classes'],
+                        file_names[bid],
+                        self.decoder_id
+                    )
 
     def eval_instance_epoch_end(self):
         log_prefix = f"val"
@@ -669,7 +708,7 @@ class InstanceSegmentation(pl.LightningModule):
         root_path = f"eval_output"
         base_path = f"{root_path}/instance_evaluation_{self.config.general.experiment_name}_{self.current_epoch}"
 
-        if self.config.data.is_scannet:
+        if self.validation_dataset.dataset_name in ["scannet", "stpls3d", "scannet200"]:
             gt_data_path = f"{self.validation_dataset.data_dir[0]}/instance_gt/{self.validation_dataset.mode}"
         else:
             gt_data_path = f"{self.validation_dataset.data_dir[0]}/instance_gt/Area_{self.config.general.area}"
@@ -682,7 +721,7 @@ class InstanceSegmentation(pl.LightningModule):
             os.makedirs(base_path)
 
         try:
-            if not self.config.data.is_scannet:
+            if self.validation_dataset.dataset_name == "s3dis":
                 new_preds = {}
                 for key in self.preds.keys():
                     new_preds[key.replace(f"Area_{self.config.general.area}_", "")] = {
@@ -693,8 +732,18 @@ class InstanceSegmentation(pl.LightningModule):
                 mprec, mrec = evaluate(new_preds, gt_data_path, pred_path, dataset="s3dis")
                 ap_results[f"{log_prefix}_mean_precision"] = mprec
                 ap_results[f"{log_prefix}_mean_recall"] = mrec
+            elif self.validation_dataset.dataset_name == "stpls3d":
+                new_preds = {}
+                for key in self.preds.keys():
+                    new_preds[key.replace(".txt", "")] = {
+                        'pred_classes': self.preds[key]['pred_classes'],
+                        'pred_masks': self.preds[key]['pred_masks'],
+                        'pred_scores': self.preds[key]['pred_scores']
+                    }
+
+                evaluate(new_preds, gt_data_path, pred_path, dataset="stpls3d")
             else:
-                evaluate(self.preds, gt_data_path, pred_path, dataset="scannet200" if self.config.general.scannet200 else "scannet")
+                evaluate(self.preds, gt_data_path, pred_path, dataset=self.validation_dataset.dataset_name)
             with open(pred_path, "r") as fin:
                 for line_id, line in enumerate(fin):
                     if line_id == 0:
@@ -702,7 +751,7 @@ class InstanceSegmentation(pl.LightningModule):
                         continue
                     class_name, _, ap, ap_50, ap_25 = line.strip().split(",")
 
-                    if self.config.general.scannet200:
+                    if self.validation_dataset.dataset_name == "scannet200":
                         if class_name in VALID_CLASS_IDS_200_VALIDATION:
                             ap_results[f"{log_prefix}_{class_name}_val_ap"] = float(ap)
                             ap_results[f"{log_prefix}_{class_name}_val_ap_50"] = float(ap_50)
@@ -721,7 +770,7 @@ class InstanceSegmentation(pl.LightningModule):
                         ap_results[f"{log_prefix}_{class_name}_val_ap_50"] = float(ap_50)
                         ap_results[f"{log_prefix}_{class_name}_val_ap_25"] = float(ap_25)
 
-            if self.config.general.scannet200:
+            if self.validation_dataset.dataset_name == "scannet200":
                 head_results = np.stack(head_results)
                 common_results = np.stack(common_results)
                 tail_results = np.stack(tail_results)

@@ -5,6 +5,10 @@ from random import random, sample, uniform
 from typing import List, Optional, Tuple, Union
 from random import choice
 from copy import deepcopy
+from random import randrange
+
+
+import numpy
 import torch
 from datasets.random_cuboid import RandomCuboid
 
@@ -13,7 +17,9 @@ import numpy as np
 import scipy
 import volumentations as V
 import yaml
+# from yaml import CLoader as Loader
 from torch.utils.data import Dataset
+from datasets.scannet200.scannet200_constants import SCANNET_COLOR_MAP_200, SCANNET_COLOR_MAP_20
 
 logger = logging.getLogger(__name__)
 
@@ -23,6 +29,7 @@ class SemanticSegmentationDataset(Dataset):
 
     def __init__(
         self,
+        dataset_name="scannet",
         data_dir: Optional[Union[str, Tuple[str]]] = "data/processed/scannet",
         label_db_filepath: Optional[
             str
@@ -60,12 +67,69 @@ class SemanticSegmentationDataset(Dataset):
         cropping_v1=True,
         reps_per_epoch=1,
         area=-1,
-        on_crops=False
+        on_crops=False,
+        eval_inner_core=-1,
+        filter_out_classes=[],
+        label_offset=0,
+        add_clip=False,
+        is_elastic_distortion=True,
+        color_drop=0.0
     ):
         assert task in ["instance_segmentation", "semantic_segmentation"], "unknown task"
+
+        self.add_clip = add_clip
+        self.dataset_name = dataset_name
+        self.is_elastic_distortion = is_elastic_distortion
+        self.color_drop = color_drop
+
+        if self.dataset_name == "scannet":
+            self.color_map = SCANNET_COLOR_MAP_20
+            self.color_map[255] = (255, 255, 255)
+        elif self.dataset_name == "stpls3d":
+            self.color_map = {
+                0:[0, 255, 0],  # Ground
+                1:[0, 0, 255],  # Build
+                2:[0, 255, 255],  # LowVeg
+                3:[255, 255, 0],  # MediumVeg
+                4:[255, 0, 255],  # HiVeg
+                5:[100, 100, 255],  # Vehicle
+                6:[200, 200, 100],  # Truck
+                7:[170, 120, 200],  # Aircraft
+                8:[255, 0, 0],  # MilitaryVec
+                9:[200, 100, 100],  # Bike
+                10:[10, 200, 100],  # Motorcycle
+                11:[200, 200, 200],  # LightPole
+                12:[50, 50, 50],  # StreetSign
+                13:[60, 130, 60],  # Clutter
+                14:[130, 30, 60]}  # Fence
+        elif self.dataset_name == "scannet200":
+            self.color_map = SCANNET_COLOR_MAP_200
+        elif self.dataset_name == "s3dis":
+            self.color_map = {
+            0: [0, 255, 0],        # ceiling
+            1: [0, 0, 255],        # floor
+            2: [0, 255, 255],      # wall
+            3: [255, 255, 0],      # beam
+            4: [255, 0, 255],      # column
+            5: [100, 100, 255],    # window
+            6: [200, 200, 100],    # door
+            7: [170, 120, 200],    # table
+            8: [255, 0, 0],        # chair
+            9: [200, 100, 100],    # sofa
+            10: [10, 200, 100],     # bookcase
+            11: [200, 200, 200],    # board
+            12: [50, 50, 50]      # clutter
+            }
+        else:
+            assert False, "dataset not known"
+
         self.task = task
 
+        self.filter_out_classes = filter_out_classes
+        self.label_offset = label_offset
+
         self.area = area
+        self.eval_inner_core = eval_inner_core
 
         self.reps_per_epoch = reps_per_epoch
 
@@ -109,7 +173,7 @@ class SemanticSegmentationDataset(Dataset):
         self._data = []
         for database_path in self.data_dir:
             database_path = Path(database_path)
-            if "s3dis" not in str(database_path):
+            if self.dataset_name != "s3dis":
                 if not (database_path / f"{mode}_database.yaml").exists():
                     print(f"generate {database_path}/{mode}_database.yaml first")
                     exit()
@@ -135,7 +199,7 @@ class SemanticSegmentationDataset(Dataset):
             )
 
         # normalize color channels
-        if "s3dis" in str(self.data_dir[0]):
+        if self.dataset_name == "s3dis":
             color_mean_std = color_mean_std.replace("color_mean_std.yaml", f"Area_{self.area}_color_mean_std.yaml")
 
         if Path(str(color_mean_std)).exists():
@@ -168,30 +232,95 @@ class SemanticSegmentationDataset(Dataset):
         if add_colors:
             self.normalize_color = A.Normalize(mean=color_mean, std=color_std)
 
-    @property
-    def color_map(self):
-        return torch.FloatTensor(
-            [[255, 255, 255],  # unlabeled
-             [174, 199, 232],  # wall
-                [152, 223, 138],  # floor
-                [31, 119, 180],  # cabinet
-                [255, 187, 120],  # bed
-                [188, 189, 34],  # chair
-                [140, 86, 75],   # sofa
-                [255, 152, 150],  # table
-                [214, 39, 40],   # door
-                [197, 176, 213],  # window
-                [148, 103, 189],  # bookshelf
-                [196, 156, 148],  # picture
-                [23, 190, 207],  # counter
-                [247, 182, 210],  # desk
-                [219, 219, 141],  # curtain
-                [255, 127, 14],  # refrigerator
-                [158, 218, 229],  # shower curtain
-                [44, 160, 44],   # toilet
-                [112, 128, 144],  # sink
-                [227, 119, 194],  # bathtub
-                [82, 84, 163]])  # otherfurn
+        self.cache_data = cache_data
+        # new_data = []
+        if self.cache_data:
+            new_data = []
+            for i in range(len(self._data)):
+                self._data[i]['data'] = np.load(self.data[i]["filepath"].replace("../../", ""))
+                if self.on_crops:
+                    if self.eval_inner_core == -1:
+                        for block_id, block in enumerate(self.splitPointCloud(self._data[i]['data'])):
+                            if len(block) > 10000:
+                                new_data.append({
+                                    'instance_gt_filepath': self._data[i]['instance_gt_filepath'][block_id] \
+                                        if len(self._data[i]['instance_gt_filepath']) > 0 else list(),
+                                    'scene': f"{self._data[i]['scene'].replace('.txt', '')}_{block_id}.txt",
+                                    'raw_filepath': f"{self.data[i]['filepath'].replace('.npy', '')}_{block_id}",
+                                    'data': block
+                                })
+                            else:
+                                assert False
+                    else:
+                        conds_inner, blocks_outer = self.splitPointCloud(self._data[i]['data'],
+                                                                         size=self.crop_length,
+                                                                         inner_core=self.eval_inner_core)
+
+                        for block_id in range(len(conds_inner)):
+                            cond_inner = conds_inner[block_id]
+                            block_outer = blocks_outer[block_id]
+
+                            if cond_inner.sum() > 10000:
+                                new_data.append({
+                                    'instance_gt_filepath': self._data[i]['instance_gt_filepath'][block_id] \
+                                        if len(self._data[i]['instance_gt_filepath']) > 0 else list(),
+                                    'scene': f"{self._data[i]['scene'].replace('.txt', '')}_{block_id}.txt",
+                                    'raw_filepath': f"{self.data[i]['filepath'].replace('.npy', '')}_{block_id}",
+                                    'data': block_outer,
+                                    'cond_inner': cond_inner
+                                })
+                            else:
+                                assert False
+
+            if self.on_crops:
+                self._data = new_data
+                #new_data.append(np.load(self.data[i]["filepath"].replace("../../", "")))
+            #self._data = new_data
+
+    def splitPointCloud(self, cloud, size=50.0, stride=50, inner_core=-1):
+        if inner_core == -1:
+            limitMax = np.amax(cloud[:, 0:3], axis=0)
+            width = int(np.ceil((limitMax[0] - size) / stride)) + 1
+            depth = int(np.ceil((limitMax[1] - size) / stride)) + 1
+            cells = [(x * stride, y * stride) for x in range(width) for y in range(depth)]
+            blocks = []
+            for (x, y) in cells:
+                xcond = (cloud[:, 0] <= x + size) & (cloud[:, 0] >= x)
+                ycond = (cloud[:, 1] <= y + size) & (cloud[:, 1] >= y)
+                cond = xcond & ycond
+                block = cloud[cond, :]
+                blocks.append(block)
+            return blocks
+        else:
+            limitMax = np.amax(cloud[:, 0:3], axis=0)
+            width = int(np.ceil((limitMax[0] - inner_core) / stride)) + 1
+            depth = int(np.ceil((limitMax[1] - inner_core) / stride)) + 1
+            cells = [(x * stride, y * stride) for x in range(width) for y in range(depth)]
+            blocks_outer = []
+            conds_inner = []
+            for (x, y) in cells:
+                xcond_outer = (cloud[:, 0] <= x + inner_core / 2. + size / 2) & (cloud[:, 0] >= x + inner_core / 2. - size / 2)
+                ycond_outer = (cloud[:, 1] <= y + inner_core / 2. + size / 2) & (cloud[:, 1] >= y + inner_core / 2. - size / 2)
+
+                cond_outer = xcond_outer & ycond_outer
+                block_outer = cloud[cond_outer, :]
+
+                xcond_inner = (block_outer[:, 0] <= x + inner_core) & (block_outer[:, 0] >= x)
+                ycond_inner = (block_outer[:, 1] <= y + inner_core) & (block_outer[:, 1] >= y)
+
+                cond_inner = xcond_inner & ycond_inner
+
+                conds_inner.append(cond_inner)
+                blocks_outer.append(block_outer)
+            return conds_inner, blocks_outer
+
+    def map2color(self, labels):
+        output_colors = list()
+
+        for label in labels:
+            output_colors.append(self.color_map[label])
+
+        return torch.tensor(output_colors)
 
     def __len__(self):
         if self.is_tta:
@@ -204,9 +333,13 @@ class SemanticSegmentationDataset(Dataset):
         if self.is_tta:
             idx = idx % len(self.data)
 
-        points = np.load(self.data[idx]["filepath"].replace("../../", ""))
+        if self.cache_data:
+            points = self.data[idx]['data']
+        else:
+            assert not self.on_crops, "you need caching if on crops"
+            points = np.load(self.data[idx]["filepath"].replace("../../", ""))
 
-        if "train" in self.mode and any([x in self.data_dir[0].split("/")[-1] for x in ["s3dis"]]):
+        if "train" in self.mode and self.dataset_name in ["s3dis", "stpls3d"]:
             inds = self.random_cuboid(points)
             points = points[inds]
 
@@ -215,7 +348,7 @@ class SemanticSegmentationDataset(Dataset):
             points[:, 3:6],
             points[:, 6:9],
             points[:, 9],
-            points[:, 10:],
+            points[:, 10:12],
         )
 
         raw_coordinates = coordinates.copy()
@@ -242,7 +375,13 @@ class SemanticSegmentationDataset(Dataset):
 
 
             coordinates -= coordinates.mean(0)
-            coordinates += np.random.uniform(coordinates.min(0), coordinates.max(0)) / 2
+
+            try:
+                coordinates += np.random.uniform(coordinates.min(0), coordinates.max(0)) / 2
+            except OverflowError as err:
+                print(coordinates)
+                print(coordinates.shape)
+                raise err
 
             if self.instance_oversampling > 0.0:
                 coordinates, color, normals, labels = self.augment_individual_instance(
@@ -256,11 +395,13 @@ class SemanticSegmentationDataset(Dataset):
                 if random() < 0.5:
                     coord_max = np.max(points[:, i])
                     coordinates[:, i] = coord_max - coordinates[:, i]
+
             if random() < 0.95:
-                for granularity, magnitude in ((0.2, 0.4), (0.8, 1.6)):
-                    coordinates = elastic_distortion(
-                        coordinates, granularity, magnitude
-                    )
+                if self.is_elastic_distortion:
+                    for granularity, magnitude in ((0.2, 0.4), (0.8, 1.6)):
+                        coordinates = elastic_distortion(
+                            coordinates, granularity, magnitude
+                        )
             aug = self.volume_augmentations(
                 points=coordinates, normals=normals, features=color, labels=labels,
             )
@@ -371,6 +512,9 @@ class SemanticSegmentationDataset(Dataset):
                         (labels, np.full_like(unlabeled_labels, self.ignore_label))
                     )
 
+            if random() < self.color_drop:
+                color[:] = 255
+
         # normalize color information
         pseudo_image = color.astype(np.uint8)[np.newaxis, :, :]
         color = np.squeeze(self.normalize_color(image=pseudo_image)["image"])
@@ -389,15 +533,28 @@ class SemanticSegmentationDataset(Dataset):
         if self.add_normals:
             features = np.hstack((features, normals))
         if self.add_raw_coordinates:
-            features = np.hstack((features, coordinates))
+            if len(features.shape) == 1:
+                features = np.hstack((features[None, ...], coordinates))
+            else:
+                features = np.hstack((features, coordinates))
 
+        #if self.task != "semantic_segmentation":
         if self.data[idx]['raw_filepath'].split("/")[-2] in ['scene0636_00', 'scene0154_00']:
             return self.__getitem__(0)
 
-        if "s3dis" in self.data_dir[0].split("/")[-1]:
-            return coordinates, features, labels, self.data[idx]['area'] + "_" + self.data[idx]['scene'], raw_color, raw_normals, raw_coordinates, idx
+        if self.dataset_name == "s3dis":
+            return coordinates, features, labels, self.data[idx]['area'] + "_" + self.data[idx]['scene'],\
+                   raw_color, raw_normals, raw_coordinates, idx
+        if self.dataset_name == "stpls3d":
+            if labels.shape[1] != 1: # only segments --> test set!
+                if np.unique(labels[:, -2]).shape[0] < 2:
+                    print("NO INSTANCES")
+                    return self.__getitem__(0)
+            return coordinates, features, labels, self.data[idx]['scene'], \
+                   raw_color, raw_normals, raw_coordinates, idx
         else:
-            return coordinates, features, labels, self.data[idx]['raw_filepath'].split("/")[-2], raw_color, raw_normals, raw_coordinates, idx
+            return coordinates, features, labels, self.data[idx]['raw_filepath'].split("/")[-2], \
+                   raw_color, raw_normals, raw_coordinates, idx
 
     @property
     def data(self):
@@ -412,7 +569,8 @@ class SemanticSegmentationDataset(Dataset):
     @staticmethod
     def _load_yaml(filepath):
         with open(filepath) as f:
-            file = yaml.safe_load(f)
+            # file = yaml.load(f, Loader=Loader)
+            file = yaml.load(f)
         return file
 
     def _select_correct_labels(self, labels, num_labels):

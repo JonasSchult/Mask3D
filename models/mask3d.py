@@ -9,7 +9,7 @@ from models.modules.common import conv
 from models.position_embedding import PositionEmbeddingCoordsSine
 from third_party.pointnet2.pointnet2_utils import furthest_point_sample
 from models.modules.helpers_3detr import GenericMLP
-from torch_scatter import scatter_mean, scatter_max
+from torch_scatter import scatter_mean, scatter_max, scatter_min
 from torch.cuda.amp import autocast
 
 
@@ -25,7 +25,7 @@ class Mask3D(nn.Module):
                  random_queries,
                  gauss_scale,
                  random_query_both,
-                 random_normal,
+                 random_normal
                  ):
         super().__init__()
 
@@ -293,6 +293,9 @@ class Mask3D(nn.Module):
                 decomposed_attn = attn_mask.decomposed_features
 
                 curr_sample_size = max([pcd.shape[0] for pcd in decomposed_aux])
+
+                if min([pcd.shape[0] for pcd in decomposed_aux]) == 1:
+                    raise RuntimeError("only a single point gives nans in cross-attention")
 
                 if not (self.max_sample_size or is_eval):
                     curr_sample_size = min(curr_sample_size, self.sample_sizes[hlevel])
@@ -658,3 +661,5 @@ def _get_activation_fn(activation):
     if activation == "glu":
         return F.glu
     raise RuntimeError(F"activation should be relu/gelu, not {activation}.")
+
+

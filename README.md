@@ -139,11 +139,11 @@ Following PointGroup, HAIS and SoftGroup, we finetune a model pretrained on Scan
 | ScanNet200 test | 27.8 | 38.8 | 44.5 | [config](scripts/scannet200/scannet200_benchmark.sh) | [checkpoint](https://omnomnom.vision.rwth-aachen.de/data/mask3d/checkpoints/scannet200/scannet200_benchmark.ckpt) | [scores](https://kaldir.vc.in.tum.de/scannet_benchmark/result_details?id=1242) | [visualizations](https://omnomnom.vision.rwth-aachen.de/data/mask3d/visualizations/scannet200/test/)
 
 ### [STPLS3D](https://www.stpls3d.com/)
-**:construction: CODE COMING SOON (ETA: Mid of October)**
 
 | Dataset | AP | AP_50 | AP_25 | Config | Checkpoint :floppy_disk: | Scores :chart_with_upwards_trend: | Visualizations :telescope:
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-| STPLS3D | 57.3 | 74.3 | 81.6 | config | checkpoint | [scores](./docs/detailed_scores/stpls3d.txt) | [visualizations](https://omnomnom.vision.rwth-aachen.de/data/mask3d/visualizations/stpls3d/)
+| STPLS3D val | 57.3 | 74.3 | 81.6 | [config](scripts/stpls3d/stpls3d_val.sh) | [checkpoint](https://omnomnom.vision.rwth-aachen.de/data/mask3d/checkpoints/stpls3d/stpls3d_val.ckpt) | [scores](./docs/detailed_scores/stpls3d.txt) | [visualizations](https://omnomnom.vision.rwth-aachen.de/data/mask3d/visualizations/stpls3d/)
+| [STPLS3D test](https://codalab.lisn.upsaclay.fr/competitions/4646#results) | 63.4 | 79.2 | 85.6 | [config](scripts/stpls3d/stpls3d_benchmark.sh) | [checkpoint](https://omnomnom.vision.rwth-aachen.de/data/mask3d/checkpoints/stpls3d/stpls3d_benchmark.zip) | [scores](https://codalab.lisn.upsaclay.fr/competitions/4646#results) | visualizations
 
 ## BibTeX :pray:
 ```
