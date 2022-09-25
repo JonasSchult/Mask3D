@@ -1,0 +1,7 @@
+# @package _group_
+deterministic: false
+max_epochs: 601
+min_epochs: 1
+resume_from_checkpoint: null
+check_val_every_n_epoch: 50
+num_sanity_val_steps: 2

@@ -1,0 +1,75 @@
+general:
+  scannet200: false
+
+  train_mode: true
+  task: "instance_segmentation"
+  seed: null
+  checkpoint: null
+  backbone_checkpoint: null
+  freeze_backbone: false # train only last layer
+  linear_probing_backbone: false
+  train_on_segments: false
+  include_ignore: true
+  eval_on_segments: false
+  filter_out_instances: false
+  save_visualizations: false
+  visualization_point_size: 20
+  decoder_id: -1
+  export: false
+  use_dbscan: false
+  ignore_class_threshold: 100
+  project_name: scannet
+  workspace: jonasschult
+  experiment_name: DEBUG_ABLATION
+  num_targets: 19
+  add_instance: true
+  dbscan_eps: 0.95
+  dbscan_min_points: 1
+
+  export_threshold: 0.0001
+
+  reps_per_epoch: 1
+
+  on_crops: false
+
+  scores_threshold: 0.0
+  iou_threshold: 1.0
+
+  area: 5
+
+  topk_per_image: 100
+
+  ignore_mask_idx: []
+
+  max_batch_size: 99999999
+
+  save_dir: saved/${general.experiment_name}
+  # time/commit/md5(config)_uuid
+  # time/experiment_id/version_uuid
+  # experiment_id: 1 # commit[:8], or unique from logger
+  # version: 1 # md5[:8] of config
+
+  gpus: 1
+
+defaults:
+  - data: indoor
+  - data/data_loaders: simple_loader
+  - data/datasets: scannet
+  - data/collation_functions: voxelize_collate
+  - logging: full
+  - model: mask3d
+  - metrics: miou
+  - optimizer: adamw
+  - scheduler: onecyclelr
+  - trainer: trainer600
+  - callbacks: callbacks_instance_segmentation
+  - matcher: hungarian_matcher
+  - loss: set_criterion
+
+hydra:
+  run:
+    dir: saved/hydra_logs/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  sweep:
+    dir: saved/hydra_logs/${now:%Y-%m-%d}/${now:%H-%M-%S}
+    # dir: ${general.save_dir}
+    subdir: ${hydra.job.num}_${hydra.job.id}

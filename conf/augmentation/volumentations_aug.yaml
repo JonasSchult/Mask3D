@@ -1,0 +1,53 @@
+# pi   = 3.14159265358979
+# pi/2 = 1.57079632679489
+# pi/3 = 1.04719755119659
+# pi/6 = 0.52359877559829
+# pi/12 = 0.26179938779914
+# pi/24 = 0.13089969389957
+#
+__version__: 0.1.6
+transform:
+  __class_fullname__: volumentations.core.composition.Compose
+  additional_targets: {}
+  p: 1.0
+  transforms:
+    - __class_fullname__: volumentations.augmentations.transforms.Scale3d
+      always_apply: true
+      p: 0.5
+      scale_limit:
+        - - -0.1
+          - 0.1
+        - - -0.1
+          - 0.1
+        - - -0.1
+          - 0.1
+    - __class_fullname__: volumentations.augmentations.transforms.RotateAroundAxis3d
+      always_apply: true
+      axis:
+        - 0
+        - 0
+        - 1
+      p: 0.5
+      rotation_limit:
+        - -3.141592653589793
+        - 3.141592653589793
+    - __class_fullname__: volumentations.augmentations.transforms.RotateAroundAxis3d
+      always_apply: true
+      axis:
+        - 0
+        - 1
+        - 0
+      p: 0.5
+      rotation_limit:
+        - -0.13089969389957
+        - 0.13089969389957
+    - __class_fullname__: volumentations.augmentations.transforms.RotateAroundAxis3d
+      always_apply: true
+      axis:
+        - 1
+        - 0
+        - 0
+      p: 0.5
+      rotation_limit:
+        - -0.13089969389957
+        - 0.13089969389957

@@ -1,0 +1,10 @@
+# @package _group_
+- _target_: pytorch_lightning.loggers.TensorBoardLogger
+  name: ${general.experiment_id}
+  version: ${general.version}
+  save_dir: ${general.save_dir}
+
+- _target_: pytorch_lightning.loggers.CSVLogger
+  name: ${general.experiment_id}
+  version: ${general.version}
+  save_dir: ${general.save_dir}

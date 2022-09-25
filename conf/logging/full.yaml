@@ -1,0 +1,8 @@
+# @package _group_
+- _target_: pytorch_lightning.loggers.WandbLogger
+  project: ${general.project_name}
+  name: ${general.experiment_name}
+  save_dir: ${general.save_dir}
+  entity: "schult"
+  resume: "allow"
+  id: ${general.experiment_name}

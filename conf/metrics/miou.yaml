@@ -1,0 +1,4 @@
+# @package _group_
+_target_: models.metrics.ConfusionMatrix
+num_classes: ${data.num_labels}
+ignore_label: ${data.ignore_label}

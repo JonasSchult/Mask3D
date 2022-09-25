@@ -1,0 +1,3 @@
+# @package _group_
+_target_: torch.nn.CrossEntropyLoss
+ignore_index: ${data.ignore_label}
