@@ -99,42 +99,42 @@ We provide detailed scores and network configurations with trained checkpoints.
 
 ### [S3DIS](http://buildingparser.stanford.edu/dataset.html) (pretrained on ScanNet train+val)
 Following PointGroup, HAIS and SoftGroup, we finetune a model pretrained on ScanNet ([config](./scripts/scannet/scannet_pretrain_for_s3dis.sh) and [checkpoint](https://omnomnom.vision.rwth-aachen.de/data/mask3d/checkpoints/s3dis/scannet_pretrained/scannet_pretrained.ckpt)).
-| Dataset | AP | AP_50 | AP_25 | Config | Checkpoint :floppy_disk: | Scores :chart_with_upwards_trend:
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-| Area 1 | 69.3 | 81.9 | 87.7 | [config](scripts/s3dis/s3dis_pretrained.sh) | [checkpoint](https://omnomnom.vision.rwth-aachen.de/data/mask3d/checkpoints/s3dis/scannet_pretrained/area1_scannet_pretrained.ckpt) | [scores](./docs/detailed_scores/s3dis/scannet_pretrained/s3dis_area1_scannet_pretrained.txt)
-| Area 2 | 44.0 | 59.5 | 66.5 | [config](scripts/s3dis/s3dis_pretrained.sh) | [checkpoint](https://omnomnom.vision.rwth-aachen.de/data/mask3d/checkpoints/s3dis/scannet_pretrained/area2_scannet_pretrained.ckpt) | [scores](./docs/detailed_scores/s3dis/scannet_pretrained/s3dis_area2_scannet_pretrained.txt)
-| Area 3 | 73.4 | 83.2 | 88.2 | [config](scripts/s3dis/s3dis_pretrained.sh) | [checkpoint](https://omnomnom.vision.rwth-aachen.de/data/mask3d/checkpoints/s3dis/scannet_pretrained/area3_scannet_pretrained.ckpt) | [scores](./docs/detailed_scores/s3dis/scannet_pretrained/s3dis_area3_scannet_pretrained.txt)
-| Area 4 | 58.0 | 69.5 | 74.9 | [config](scripts/s3dis/s3dis_pretrained.sh) | [checkpoint](https://omnomnom.vision.rwth-aachen.de/data/mask3d/checkpoints/s3dis/scannet_pretrained/area4_scannet_pretrained.ckpt) | [scores](./docs/detailed_scores/s3dis/scannet_pretrained/s3dis_area4_scannet_pretrained.txt)
-| Area 5 | 57.8 | 71.9 | 77.2 | [config](scripts/s3dis/s3dis_pretrained.sh) | [checkpoint](https://omnomnom.vision.rwth-aachen.de/data/mask3d/checkpoints/s3dis/scannet_pretrained/area5_scannet_pretrained.ckpt) | [scores](./docs/detailed_scores/s3dis/scannet_pretrained/s3dis_area5_scannet_pretrained.txt)
-| Area 6 | 68.4 | 79.9 | 85.2 | [config](scripts/s3dis/s3dis_pretrained.sh) | [checkpoint](https://omnomnom.vision.rwth-aachen.de/data/mask3d/checkpoints/s3dis/scannet_pretrained/area6_scannet_pretrained.ckpt) | [scores](./docs/detailed_scores/s3dis/scannet_pretrained/s3dis_area6_scannet_pretrained.txt)
+| Dataset | AP | AP_50 | AP_25 | Config | Checkpoint :floppy_disk: | Scores :chart_with_upwards_trend: | Visualizations :telescope:
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+| Area 1 | 69.3 | 81.9 | 87.7 | [config](scripts/s3dis/s3dis_pretrained.sh) | [checkpoint](https://omnomnom.vision.rwth-aachen.de/data/mask3d/checkpoints/s3dis/scannet_pretrained/area1_scannet_pretrained.ckpt) | [scores](./docs/detailed_scores/s3dis/scannet_pretrained/s3dis_area1_scannet_pretrained.txt) | [visualizations](https://omnomnom.vision.rwth-aachen.de/data/mask3d/visualizations/s3dis/scannet_pretrained/area_1/)
+| Area 2 | 44.0 | 59.5 | 66.5 | [config](scripts/s3dis/s3dis_pretrained.sh) | [checkpoint](https://omnomnom.vision.rwth-aachen.de/data/mask3d/checkpoints/s3dis/scannet_pretrained/area2_scannet_pretrained.ckpt) | [scores](./docs/detailed_scores/s3dis/scannet_pretrained/s3dis_area2_scannet_pretrained.txt) | [visualizations](https://omnomnom.vision.rwth-aachen.de/data/mask3d/visualizations/s3dis/scannet_pretrained/area_2/)
+| Area 3 | 73.4 | 83.2 | 88.2 | [config](scripts/s3dis/s3dis_pretrained.sh) | [checkpoint](https://omnomnom.vision.rwth-aachen.de/data/mask3d/checkpoints/s3dis/scannet_pretrained/area3_scannet_pretrained.ckpt) | [scores](./docs/detailed_scores/s3dis/scannet_pretrained/s3dis_area3_scannet_pretrained.txt) | [visualizations](https://omnomnom.vision.rwth-aachen.de/data/mask3d/visualizations/s3dis/scannet_pretrained/area_3/)
+| Area 4 | 58.0 | 69.5 | 74.9 | [config](scripts/s3dis/s3dis_pretrained.sh) | [checkpoint](https://omnomnom.vision.rwth-aachen.de/data/mask3d/checkpoints/s3dis/scannet_pretrained/area4_scannet_pretrained.ckpt) | [scores](./docs/detailed_scores/s3dis/scannet_pretrained/s3dis_area4_scannet_pretrained.txt) | [visualizations](https://omnomnom.vision.rwth-aachen.de/data/mask3d/visualizations/s3dis/scannet_pretrained/area_4/)
+| Area 5 | 57.8 | 71.9 | 77.2 | [config](scripts/s3dis/s3dis_pretrained.sh) | [checkpoint](https://omnomnom.vision.rwth-aachen.de/data/mask3d/checkpoints/s3dis/scannet_pretrained/area5_scannet_pretrained.ckpt) | [scores](./docs/detailed_scores/s3dis/scannet_pretrained/s3dis_area5_scannet_pretrained.txt) | [visualizations](https://omnomnom.vision.rwth-aachen.de/data/mask3d/visualizations/s3dis/scannet_pretrained/area_5/)
+| Area 6 | 68.4 | 79.9 | 85.2 | [config](scripts/s3dis/s3dis_pretrained.sh) | [checkpoint](https://omnomnom.vision.rwth-aachen.de/data/mask3d/checkpoints/s3dis/scannet_pretrained/area6_scannet_pretrained.ckpt) | [scores](./docs/detailed_scores/s3dis/scannet_pretrained/s3dis_area6_scannet_pretrained.txt) | [visualizations](https://omnomnom.vision.rwth-aachen.de/data/mask3d/visualizations/s3dis/scannet_pretrained/area_6/)
 
 ### [S3DIS](http://buildingparser.stanford.edu/dataset.html) (from scratch)
 
-| Dataset | AP | AP_50 | AP_25 | Config | Checkpoint :floppy_disk: | Scores :chart_with_upwards_trend:
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-| Area 1 | 74.1 | 85.1 | 89.6 | [config](scripts/s3dis/s3dis_from_scratch.sh) | [checkpoint](https://omnomnom.vision.rwth-aachen.de/data/mask3d/checkpoints/s3dis/from_scratch/area1_from_scratch.ckpt) | [scores](./docs/detailed_scores/s3dis/from_scratch/s3dis_area1_from_scratch.txt)
-| Area 2 | 44.9 | 57.1 | 67.9 | [config](scripts/s3dis/s3dis_from_scratch.sh) | [checkpoint](https://omnomnom.vision.rwth-aachen.de/data/mask3d/checkpoints/s3dis/from_scratch/area2_from_scratch.ckpt) | [scores](./docs/detailed_scores/s3dis/from_scratch/s3dis_area2_from_scratch.txt)
-| Area 3 | 74.4 | 84.4 | 88.1 | [config](scripts/s3dis/s3dis_from_scratch.sh) | [checkpoint](https://omnomnom.vision.rwth-aachen.de/data/mask3d/checkpoints/s3dis/from_scratch/area3_from_scratch.ckpt) | [scores](./docs/detailed_scores/s3dis/from_scratch/s3dis_area3_from_scratch.txt)
-| Area 4 | 63.8 | 74.7 | 81.1 | [config](scripts/s3dis/s3dis_from_scratch.sh) | [checkpoint](https://omnomnom.vision.rwth-aachen.de/data/mask3d/checkpoints/s3dis/from_scratch/area4_from_scratch.ckpt) | [scores](./docs/detailed_scores/s3dis/from_scratch/s3dis_area4_from_scratch.txt)
-| Area 5 | 56.6 | 68.4 | 75.2 | [config](scripts/s3dis/s3dis_from_scratch.sh) | [checkpoint](https://omnomnom.vision.rwth-aachen.de/data/mask3d/checkpoints/s3dis/from_scratch/area5_from_scratch.ckpt) | [scores](./docs/detailed_scores/s3dis/from_scratch/s3dis_area5_from_scratch.txt)
-| Area 6 | 73.3 | 83.4 | 87.8 | [config](scripts/s3dis/s3dis_from_scratch.sh) | [checkpoint](https://omnomnom.vision.rwth-aachen.de/data/mask3d/checkpoints/s3dis/from_scratch/area6_from_scratch.ckpt) | [scores](./docs/detailed_scores/s3dis/from_scratch/s3dis_area6_from_scratch.txt)
+| Dataset | AP | AP_50 | AP_25 | Config | Checkpoint :floppy_disk: | Scores :chart_with_upwards_trend: | Visualizations :telescope:
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+| Area 1 | 74.1 | 85.1 | 89.6 | [config](scripts/s3dis/s3dis_from_scratch.sh) | [checkpoint](https://omnomnom.vision.rwth-aachen.de/data/mask3d/checkpoints/s3dis/from_scratch/area1_from_scratch.ckpt) | [scores](./docs/detailed_scores/s3dis/from_scratch/s3dis_area1_from_scratch.txt) | [visualizations](https://omnomnom.vision.rwth-aachen.de/data/mask3d/visualizations/s3dis/from_scratch/area_1/)
+| Area 2 | 44.9 | 57.1 | 67.9 | [config](scripts/s3dis/s3dis_from_scratch.sh) | [checkpoint](https://omnomnom.vision.rwth-aachen.de/data/mask3d/checkpoints/s3dis/from_scratch/area2_from_scratch.ckpt) | [scores](./docs/detailed_scores/s3dis/from_scratch/s3dis_area2_from_scratch.txt) | [visualizations](https://omnomnom.vision.rwth-aachen.de/data/mask3d/visualizations/s3dis/from_scratch/area_2/)
+| Area 3 | 74.4 | 84.4 | 88.1 | [config](scripts/s3dis/s3dis_from_scratch.sh) | [checkpoint](https://omnomnom.vision.rwth-aachen.de/data/mask3d/checkpoints/s3dis/from_scratch/area3_from_scratch.ckpt) | [scores](./docs/detailed_scores/s3dis/from_scratch/s3dis_area3_from_scratch.txt) | [visualizations](https://omnomnom.vision.rwth-aachen.de/data/mask3d/visualizations/s3dis/from_scratch/area_3/)
+| Area 4 | 63.8 | 74.7 | 81.1 | [config](scripts/s3dis/s3dis_from_scratch.sh) | [checkpoint](https://omnomnom.vision.rwth-aachen.de/data/mask3d/checkpoints/s3dis/from_scratch/area4_from_scratch.ckpt) | [scores](./docs/detailed_scores/s3dis/from_scratch/s3dis_area4_from_scratch.txt) | [visualizations](https://omnomnom.vision.rwth-aachen.de/data/mask3d/visualizations/s3dis/from_scratch/area_4/)
+| Area 5 | 56.6 | 68.4 | 75.2 | [config](scripts/s3dis/s3dis_from_scratch.sh) | [checkpoint](https://omnomnom.vision.rwth-aachen.de/data/mask3d/checkpoints/s3dis/from_scratch/area5_from_scratch.ckpt) | [scores](./docs/detailed_scores/s3dis/from_scratch/s3dis_area5_from_scratch.txt) | [visualizations](https://omnomnom.vision.rwth-aachen.de/data/mask3d/visualizations/s3dis/from_scratch/area_5/)
+| Area 6 | 73.3 | 83.4 | 87.8 | [config](scripts/s3dis/s3dis_from_scratch.sh) | [checkpoint](https://omnomnom.vision.rwth-aachen.de/data/mask3d/checkpoints/s3dis/from_scratch/area6_from_scratch.ckpt) | [scores](./docs/detailed_scores/s3dis/from_scratch/s3dis_area6_from_scratch.txt) | [visualizations](https://omnomnom.vision.rwth-aachen.de/data/mask3d/visualizations/s3dis/from_scratch/area_6/)
 
 ### [ScanNet v2](https://kaldir.vc.in.tum.de/scannet_benchmark/semantic_instance_3d?metric=ap)
 
-| Dataset | AP | AP_50 | AP_25 | Config | Checkpoint :floppy_disk: | Scores :chart_with_upwards_trend:
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-| ScanNet val  | 55.2 | 73.7 | 83.5 | [config](scripts/scannet/scannet_val.sh) | [checkpoint](https://omnomnom.vision.rwth-aachen.de/data/mask3d/checkpoints/scannet/scannet_val.ckpt) | [scores](./docs/detailed_scores/scannet_val.txt)
-| ScanNet test | 56.6 | 78.0 | 87.0 | [config](scripts/scannet/scannet_benchmark.sh) | [checkpoint](https://omnomnom.vision.rwth-aachen.de/data/mask3d/checkpoints/scannet/scannet_benchmark.ckpt) | [scores](http://kaldir.vc.in.tum.de/scannet_benchmark/result_details?id=1081)
+| Dataset | AP | AP_50 | AP_25 | Config | Checkpoint :floppy_disk: | Scores :chart_with_upwards_trend: | Visualizations :telescope:
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+| ScanNet val  | 55.2 | 73.7 | 83.5 | [config](scripts/scannet/scannet_val.sh) | [checkpoint](https://omnomnom.vision.rwth-aachen.de/data/mask3d/checkpoints/scannet/scannet_val.ckpt) | [scores](./docs/detailed_scores/scannet_val.txt) | [visualizations](https://omnomnom.vision.rwth-aachen.de/data/mask3d/visualizations/scannet/val/)
+| ScanNet test | 56.6 | 78.0 | 87.0 | [config](scripts/scannet/scannet_benchmark.sh) | [checkpoint](https://omnomnom.vision.rwth-aachen.de/data/mask3d/checkpoints/scannet/scannet_benchmark.ckpt) | [scores](http://kaldir.vc.in.tum.de/scannet_benchmark/result_details?id=1081) | [visualizations](https://omnomnom.vision.rwth-aachen.de/data/mask3d/visualizations/scannet/test/)
 
 ### [ScanNet 200](https://kaldir.vc.in.tum.de/scannet_benchmark/scannet200_semantic_instance_3d)
 
-| Dataset | AP | AP_50 | AP_25 | Config | Checkpoint :floppy_disk: | Scores :chart_with_upwards_trend:
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-| ScanNet200 val | 27.4 | 37.0 | 42.3 | [config](scripts/scannet200/scannet200_val.sh) | [checkpoint](https://omnomnom.vision.rwth-aachen.de/data/mask3d/checkpoints/scannet200/scannet200_val.ckpt) | [scores](./docs/detailed_scores/scannet200_val.txt)
-| ScanNet200 test | 27.8 | 38.8 | 44.5 | [config](scripts/scannet200/scannet200_benchmark.sh) | [checkpoint](https://omnomnom.vision.rwth-aachen.de/data/mask3d/checkpoints/scannet200/scannet200_benchmark.ckpt) | [scores](https://kaldir.vc.in.tum.de/scannet_benchmark/result_details?id=1242)
+| Dataset | AP | AP_50 | AP_25 | Config | Checkpoint :floppy_disk: | Scores :chart_with_upwards_trend: | Visualizations :telescope:
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+| ScanNet200 val | 27.4 | 37.0 | 42.3 | [config](scripts/scannet200/scannet200_val.sh) | [checkpoint](https://omnomnom.vision.rwth-aachen.de/data/mask3d/checkpoints/scannet200/scannet200_val.ckpt) | [scores](./docs/detailed_scores/scannet200_val.txt) | [visualizations](https://omnomnom.vision.rwth-aachen.de/data/mask3d/visualizations/scannet200/val/)
+| ScanNet200 test | 27.8 | 38.8 | 44.5 | [config](scripts/scannet200/scannet200_benchmark.sh) | [checkpoint](https://omnomnom.vision.rwth-aachen.de/data/mask3d/checkpoints/scannet200/scannet200_benchmark.ckpt) | [scores](https://kaldir.vc.in.tum.de/scannet_benchmark/result_details?id=1242) | [visualizations](https://omnomnom.vision.rwth-aachen.de/data/mask3d/visualizations/scannet200/test/)
 
 ### [STPLS3D](https://www.stpls3d.com/)
-** CODE COMING SOON (ETA: Mid of October)**
+**CODE COMING SOON (ETA: Mid of October)**
 
 | Dataset | AP | AP_50 | AP_25 | Config | Checkpoint :floppy_disk: | Scores :chart_with_upwards_trend: | Visualizations :telescope:
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
