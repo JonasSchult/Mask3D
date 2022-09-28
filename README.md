@@ -138,4 +138,4 @@ Following PointGroup, HAIS and SoftGroup, we finetune a model pretrained on Scan
 
 | Dataset | AP | AP_50 | AP_25 | Config | Checkpoint :floppy_disk: | Scores :chart_with_upwards_trend: | Visualizations :telescope:
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-| STPLS3D | 57.1 | 74.1 | 81.5 | config | checkpoint | [scores](./docs/detailed_scores/stpls3d.txt) | [visualizations](https://omnomnom.vision.rwth-aachen.de/data/mask3d/visualizations/stpls3d/)
+| STPLS3D | 57.3 | 74.3 | 81.6 | config | checkpoint | [scores](./docs/detailed_scores/stpls3d.txt) | [visualizations](https://omnomnom.vision.rwth-aachen.de/data/mask3d/visualizations/stpls3d/)
