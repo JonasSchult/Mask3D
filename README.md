@@ -20,7 +20,7 @@ Mask3D predicts accurate 3D semantic instances achieving state-of-the-art on Sca
 </div>
 <br><br>
 
-[[Project Webpage](https://jonasschult.github.io/Mask3D/)]
+[[Project Webpage](https://jonasschult.github.io/Mask3D/)]    [[Paper](https://arxiv.org/abs/2210.03105)]
 
 ## Code structure
 We adapt the codebase of [Mix3D](https://github.com/kumuji/mix3d) which provides a highly modularized framework for 3D Semantic Segmentation based on the MinkowskiEngine.
