@@ -22,6 +22,13 @@ Mask3D predicts accurate 3D semantic instances achieving state-of-the-art on Sca
 
 [[Project Webpage](https://jonasschult.github.io/Mask3D/)]    [[Paper](https://arxiv.org/abs/2210.03105)]
 
+## News
+
+* **14. Oktober 2022**: STPLS3D support added.
+* **10. Oktober 2022**: Mask3D ranks 2nd on the [STPLS3D Challenge](https://codalab.lisn.upsaclay.fr/competitions/4646#results) hosted by the [Urban3D Workshop](https://urban3dchallenge.github.io/) at ECCV 2022.
+* **6. Oktober 2022**: [Mask3D preprint](https://arxiv.org/abs/2210.03105) released on arXiv.
+* **25. September 2022**: Code released.
+
 ## Code structure
 We adapt the codebase of [Mix3D](https://github.com/kumuji/mix3d) which provides a highly modularized framework for 3D Semantic Segmentation based on the MinkowskiEngine.
 
@@ -143,7 +150,7 @@ Following PointGroup, HAIS and SoftGroup, we finetune a model pretrained on Scan
 | Dataset | AP | AP_50 | AP_25 | Config | Checkpoint :floppy_disk: | Scores :chart_with_upwards_trend: | Visualizations :telescope:
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
 | STPLS3D val | 57.3 | 74.3 | 81.6 | [config](scripts/stpls3d/stpls3d_val.sh) | [checkpoint](https://omnomnom.vision.rwth-aachen.de/data/mask3d/checkpoints/stpls3d/stpls3d_val.ckpt) | [scores](./docs/detailed_scores/stpls3d.txt) | [visualizations](https://omnomnom.vision.rwth-aachen.de/data/mask3d/visualizations/stpls3d/)
-| [STPLS3D test](https://codalab.lisn.upsaclay.fr/competitions/4646#results) | 63.4 | 79.2 | 85.6 | [config](scripts/stpls3d/stpls3d_benchmark.sh) | [checkpoint](https://omnomnom.vision.rwth-aachen.de/data/mask3d/checkpoints/stpls3d/stpls3d_benchmark.zip) | [scores](https://codalab.lisn.upsaclay.fr/competitions/4646#results) | visualizations
+| STPLS3D test | 63.4 | 79.2 | 85.6 | [config](scripts/stpls3d/stpls3d_benchmark.sh) | [checkpoint](https://omnomnom.vision.rwth-aachen.de/data/mask3d/checkpoints/stpls3d/stpls3d_benchmark.zip) | [scores](https://codalab.lisn.upsaclay.fr/competitions/4646#results) | visualizations
 
 ## BibTeX :pray:
 ```
