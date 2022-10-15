@@ -102,8 +102,15 @@ datasets/preprocessing/scannet_preprocessing.py preprocess \
 
 ### Training and testing :train2:
 Train Mask3D on the ScanNet dataset:
-```yaml
+```bash
 python main_instance_segmentation.py
+```
+Please refer to the [config scripts](https://github.com/JonasSchult/Mask3D/tree/main/scripts) (for example [here](https://github.com/JonasSchult/Mask3D/blob/main/scripts/scannet/scannet_val.sh#L15)) for detailed instructions how to reproduce our results.
+In the simplest case the inference command looks as follows:
+```bash
+python main_instance_segmentation.py \
+general.checkpoint='PATH_TO_CHECKPOINT.ckpt' \
+general.train_mode=false
 ```
 
 ## Trained checkpoints :floppy_disk:
