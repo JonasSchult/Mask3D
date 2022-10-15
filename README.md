@@ -84,20 +84,25 @@ cd third_party/pointnet2 && python setup.py install
 
 ### Data preprocessing :hammer:
 After installing the dependencies, we preprocess the datasets.
+
+#### ScanNet
 First, we apply Felzenswalb and Huttenlocher's Graph Based Image Segmentation algorithm to the test scenes using the default parameters.
 Please refer to the [original repository](https://github.com/ScanNet/ScanNet/tree/master/Segmentator) for details.
 Put the resulting segmentations in `./data/raw/scannet_test_segments`.
-```
-datasets/preprocessing/s3dis_preprocessing.py preprocess \
---data_dir="PATH_TO_Stanford3dDataset_v1.2" \
---save_dir="../../data/processed/s3dis"
-```
-
 ```
 datasets/preprocessing/scannet_preprocessing.py preprocess \
 --data_dir="PATH_TO_RAW_SCANNET_DATASET" \
 --save_dir="../../data/processed/scannet" \
 --git_repo="PATH_TO_SCANNET_GIT_REPO"
+```
+
+#### S3DIS
+The S3DIS dataset contains some smalls bugs which we initially fixed manually. We will soon release a preprocessing script which directly preprocesses the original dataset. For the time being, please follow the instructions [here](https://github.com/JonasSchult/Mask3D/issues/8#issuecomment-1279535948) to fix the dataset manually. Afterwards, call the preprocessing script as follows:
+
+```
+datasets/preprocessing/s3dis_preprocessing.py preprocess \
+--data_dir="PATH_TO_Stanford3dDataset_v1.2" \
+--save_dir="../../data/processed/s3dis"
 ```
 
 ### Training and testing :train2:
