@@ -12,7 +12,6 @@ general.project_name="scannet200" \
 data/datasets=scannet200 \
 general.num_targets=201 \
 data.num_labels=200 \
-general.scannet200=true \
 general.eval_on_segments=true \
 general.train_on_segments=true
 
@@ -24,7 +23,6 @@ general.checkpoint="checkpoints/scannet200/scannet200_val.ckpt" \
 data/datasets=scannet200 \
 general.num_targets=201 \
 data.num_labels=200 \
-general.scannet200=true \
 general.eval_on_segments=true \
 general.train_on_segments=true \
 general.train_mode=false \

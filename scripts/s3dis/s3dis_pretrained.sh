@@ -13,7 +13,6 @@ python main_instance_segmentation.py \
   data/datasets=s3dis \
   general.num_targets=14 \
   data.num_labels=13 \
-  data.is_scannet=false \
   general.area=${CURR_AREA} \
   general.checkpoint="checkpoints/s3dis/scannet_pretrained/scannet_pretrained.ckpt" \
   trainer.check_val_every_n_epoch=10 \
@@ -28,7 +27,6 @@ data.batch_size=4 \
 data/datasets=s3dis \
 general.num_targets=14 \
 data.num_labels=13 \
-data.is_scannet=false \
 general.area=${CURR_AREA} \
 model.num_queries=${CURR_QUERY} \
 general.topk_per_image=${CURR_TOPK} \
