@@ -90,7 +90,7 @@ First, we apply Felzenswalb and Huttenlocher's Graph Based Image Segmentation al
 Please refer to the [original repository](https://github.com/ScanNet/ScanNet/tree/master/Segmentator) for details.
 Put the resulting segmentations in `./data/raw/scannet_test_segments`.
 ```
-datasets/preprocessing/scannet_preprocessing.py preprocess \
+python datasets/preprocessing/scannet_preprocessing.py preprocess \
 --data_dir="PATH_TO_RAW_SCANNET_DATASET" \
 --save_dir="../../data/processed/scannet" \
 --git_repo="PATH_TO_SCANNET_GIT_REPO" \
@@ -101,14 +101,14 @@ datasets/preprocessing/scannet_preprocessing.py preprocess \
 The S3DIS dataset contains some smalls bugs which we initially fixed manually. We will soon release a preprocessing script which directly preprocesses the original dataset. For the time being, please follow the instructions [here](https://github.com/JonasSchult/Mask3D/issues/8#issuecomment-1279535948) to fix the dataset manually. Afterwards, call the preprocessing script as follows:
 
 ```
-datasets/preprocessing/s3dis_preprocessing.py preprocess \
+python datasets/preprocessing/s3dis_preprocessing.py preprocess \
 --data_dir="PATH_TO_Stanford3dDataset_v1.2" \
 --save_dir="../../data/processed/s3dis"
 ```
 
 #### STPLS3D
 ```
-datasets/preprocessing/stpls3d_preprocessing.py preprocess \
+python datasets/preprocessing/stpls3d_preprocessing.py preprocess \
 --data_dir="PATH_TO_STPLS3D" \
 --save_dir="../../data/processed/stpls3d"
 ```
