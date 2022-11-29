@@ -50,7 +50,7 @@ class BasePreprocessing:
                 database.append(filebase)
             self.save_database(database, mode)
         self.fix_bugs_in_labels()
-        self.joint_database()
+        self.joint_database(self.modes)
         self.compute_color_mean_std(
             train_database_path=(self.save_dir / "train_database.yaml")
         )
