@@ -775,14 +775,9 @@ class InstanceSegmentation(pl.LightningModule):
                 common_results = np.stack(common_results)
                 tail_results = np.stack(tail_results)
 
-                # COULD BE NAN IF VOXEL SIZE TOO LARGE (MOUSE, FIRE ALARM, LIGHT SWITCH, POWER STRIP)
-                head_results[np.isnan(head_results)] = 0.
-                common_results[np.isnan(common_results)] = 0.
-                tail_results[np.isnan(tail_results)] = 0.
-
-                mean_tail_results = np.mean(tail_results, axis=0)
-                mean_common_results = np.mean(common_results, axis=0)
-                mean_head_results = np.mean(head_results, axis=0)
+                mean_tail_results = np.nanmean(tail_results, axis=0)
+                mean_common_results = np.nanmean(common_results, axis=0)
+                mean_head_results = np.nanmean(head_results, axis=0)
 
                 ap_results[f"{log_prefix}_mean_tail_ap_25"] = mean_tail_results[0]
                 ap_results[f"{log_prefix}_mean_common_ap_25"] = mean_common_results[0]
@@ -796,7 +791,7 @@ class InstanceSegmentation(pl.LightningModule):
                 ap_results[f"{log_prefix}_mean_common_ap_25"] = mean_common_results[2]
                 ap_results[f"{log_prefix}_mean_head_ap_25"] = mean_head_results[2]
 
-                overall_ap_results = np.vstack((head_results, common_results, tail_results)).mean(axis=0)
+                overall_ap_results = np.nanmean(np.vstack((head_results, common_results, tail_results)), axis=0)
 
                 ap_results[f"{log_prefix}_mean_ap"] = overall_ap_results[0]
                 ap_results[f"{log_prefix}_mean_ap_50"] = overall_ap_results[1]

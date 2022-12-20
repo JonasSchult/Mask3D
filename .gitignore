@@ -5,6 +5,8 @@
 
 *.out
 
+.vscode/
+
 
 
 
