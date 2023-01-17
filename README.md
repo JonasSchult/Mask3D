@@ -27,9 +27,10 @@ Mask3D predicts accurate 3D semantic instances achieving state-of-the-art on Sca
 
 ## News
 
-* **14. Oktober 2022**: STPLS3D support added.
-* **10. Oktober 2022**: Mask3D ranks 2nd on the [STPLS3D Challenge](https://codalab.lisn.upsaclay.fr/competitions/4646#results) hosted by the [Urban3D Workshop](https://urban3dchallenge.github.io/) at ECCV 2022.
-* **6. Oktober 2022**: [Mask3D preprint](https://arxiv.org/abs/2210.03105) released on arXiv.
+* **17. January 2023**: Mask3D is accepted at ICRA 2023. :fire:
+* **14. October 2022**: STPLS3D support added.
+* **10. October 2022**: Mask3D ranks 2nd on the [STPLS3D Challenge](https://codalab.lisn.upsaclay.fr/competitions/4646#results) hosted by the [Urban3D Workshop](https://urban3dchallenge.github.io/) at ECCV 2022.
+* **6. October 2022**: [Mask3D preprint](https://arxiv.org/abs/2210.03105) released on arXiv.
 * **25. September 2022**: Code released.
 
 ## Code structure
@@ -180,7 +181,7 @@ Following PointGroup, HAIS and SoftGroup, we finetune a model pretrained on Scan
 @article{Schult22,
   title     = {{Mask3D for 3D Semantic Instance Segmentation}},
   author    = {Schult, Jonas and Engelmann, Francis and Hermans, Alexander and Litany, Or and Tang, Siyu and Leibe, Bastian},
-  booktitle = {{arXiv:2210.03105}},
-  year      = {2022}
+  booktitle = {{International Conference on Robotics and Automation (ICRA)}},
+  year      = {2023}
 }
 ```
