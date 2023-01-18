@@ -178,7 +178,7 @@ Following PointGroup, HAIS and SoftGroup, we finetune a model pretrained on Scan
 
 ## BibTeX :pray:
 ```
-@article{Schult23,
+@article{Schult23ICRA,
   title     = {{Mask3D for 3D Semantic Instance Segmentation}},
   author    = {Schult, Jonas and Engelmann, Francis and Hermans, Alexander and Litany, Or and Tang, Siyu and Leibe, Bastian},
   booktitle = {{International Conference on Robotics and Automation (ICRA)}},
