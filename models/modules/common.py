@@ -54,7 +54,7 @@ class ConvType(Enum):
         return self.value
 
 
-# Covert the ConvType var to a RegionType var
+# Convert the ConvType var to a RegionType var
 conv_to_region_type = {
     # kernel_size = [k, k, k, 1]
     ConvType.HYPERCUBE: ME.RegionType.HYPER_CUBE,
