@@ -61,29 +61,32 @@ We adapt the codebase of [Mix3D](https://github.com/kumuji/mix3d) which provides
 ### Dependencies :memo:
 The main dependencies of the project are the following:
 ```yaml
-python: 3.10.6
-cuda: 11.6
+python: 3.7.7
+cuda: 11.1
 ```
-You can set up a conda environment as follows
+You can set up a pyenv environment as follows
 ```
-conda create --name=mask3d python=3.10.6
-conda activate mask3d
+pyenv install -v 3.7.7
+pyenv virtualenv 3.7.7 mask3d
+pyenv local mask3d
+pip install --upgrade pip
 
-conda update -n base -c defaults conda
-conda install openblas-devel -c anaconda
+pip install wheel==0.38.4
 
-pip install torch torchvision --extra-index-url https://download.pytorch.org/whl/cu116
-pip install torch-scatter -f https://data.pyg.org/whl/torch-1.12.1+cu116.html
+pip install -r requirements.txt
 
-pip install ninja==1.10.2.3
-pip install pytorch-lightning fire imageio tqdm wandb python-dotenv pyviz3d scipy plyfile scikit-learn trimesh loguru albumentations volumentations
+pip install torch==1.10.0+cu111 torchvision==0.11.0+cu111 torchaudio==0.10.0 -f https://download.pytorch.org/whl/torch_stable.html
+pip install https://data.pyg.org/whl/torch-1.10.0%2Bcu113/torch_scatter-2.0.9-cp37-cp37m-linux_x86_64.whl
 
-pip install antlr4-python3-runtime==4.8
-pip install black==21.4b2
-pip install omegaconf==2.0.6 hydra-core==1.0.5 --no-deps
 pip install 'git+https://github.com/facebookresearch/detectron2.git@710e7795d0eeadf9def0e7ef957eea13532e34cf' --no-deps
 
 cd third_party/pointnet2 && python setup.py install
+
+# go to a directory you want to clone MinkowskiEngine into
+git clone https://github.com/NVIDIA/MinkowskiEngine.git
+cd MinkowskiEngine
+pyenv local mask3d
+python setup.py install
 ```
 
 ### Data preprocessing :hammer:
