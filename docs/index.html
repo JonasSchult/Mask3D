@@ -1,24 +1,22 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
-  <meta name="description"
-        content="Mask3D">
+  <meta name="description" content="Mask3D">
   <meta name="keywords" content="Mask3D">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Mask3D 🎭</title>
 
-  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
-        rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
 
   <link rel="stylesheet" href="./static/css/bulma.min.css">
   <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
-  <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
   <link rel="stylesheet" href="./static/css/index.css">
   <link rel="icon" href="./static/images/favicon.svg">
-	<link rel="stylesheet" href="css/style.css"> <!-- Resource style -->
-	<script src="js/modernizr.js"></script> <!-- Modernizr -->
+  <link rel="stylesheet" href="css/style.css"> <!-- Resource style -->
+  <script src="js/modernizr.js"></script> <!-- Modernizr -->
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script defer src="./static/js/fontawesome.all.min.js"></script>
@@ -27,275 +25,275 @@
     .rcorners1 {
       border-radius: 10px;
       background: #ffffffd0;
-      padding: 5px; 
+      padding: 5px;
       font-size: 120%;
       color: #5c5c5c;
     }
   </style>
 </head>
+
 <body>
 
 
-<section class="hero">
-  <div class="hero-body">
-    <div class="container is-max-desktop">
-      <div class="columns is-centered">
-        <div class="column has-text-centered">
-          <h1 class="title is-1 publication-title">Mask3D 🎭<br/><p class="title is-3 publication-title">Mask Transformer for 3D Instance Segmentation</p></h1>
-          <div class="is-size-5 publication-authors">
-            <span class="author-block">
-              <a href="https://jonasschult.github.io/">Jonas Schult</a><sup>1</sup>,</span>
-            <span class="author-block">
-              <a href="https://francisengelmann.github.io/">Francis Engelmann</a><sup>2,3</sup>,
-            </span>
-            <span class="author-block">
-              <a href="https://www.vision.rwth-aachen.de/person/10/">Alexander Hermans</a><sup>1</sup>,</span>
-            <span class="author-block">
-              <a href="https://orlitany.github.io/">Or Litany</a><sup>4</sup>,
-            </span>
-            <span class="author-block">
-              <a href="https://inf.ethz.ch/people/person-detail.MjYyNzgw.TGlzdC8zMDQsLTg3NDc3NjI0MQ==.html">Siyu Tang</a><sup>3</sup>,
-            </span>
-            <span class="author-block">
-              <a href="https://www.vision.rwth-aachen.de/person/1/">Bastian Leibe</a><sup>1</sup>
-            </span>
-          </div>
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">Mask3D 🎭<br />
+              <p class="title is-3 publication-title">Mask Transformer for 3D Instance Segmentation</p>
+            </h1>
+            <h1 class="title is-4" style="color: #5c5c5c;">accepted at ICRA 2023</h1>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">
+                <a href="https://jonasschult.github.io/">Jonas Schult</a><sup>1</sup>,</span>
+              <span class="author-block">
+                <a href="https://francisengelmann.github.io/">Francis Engelmann</a><sup>2,3</sup>,
+              </span>
+              <span class="author-block">
+                <a href="https://www.vision.rwth-aachen.de/person/10/">Alexander Hermans</a><sup>1</sup>,</span>
+              <span class="author-block">
+                <a href="https://orlitany.github.io/">Or Litany</a><sup>4</sup>,
+              </span>
+              <span class="author-block">
+                <a href="https://inf.ethz.ch/people/person-detail.MjYyNzgw.TGlzdC8zMDQsLTg3NDc3NjI0MQ==.html">Siyu
+                  Tang</a><sup>3</sup>,
+              </span>
+              <span class="author-block">
+                <a href="https://www.vision.rwth-aachen.de/person/1/">Bastian Leibe</a><sup>1</sup>
+              </span>
+            </div>
 
-          <div class="is-size-5 publication-authors">
-            <span class="author-block"><sup>1</sup>RWTH Aachen University,</span>
-            <span class="author-block"><sup>2</sup>ETH AI Center,</span>
-            <span class="author-block"><sup>3</sup>ETH Zurich,</span>
-            <span class="author-block"><sup>4</sup>NVIDIA</span>
-          </div>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block"><sup>1</sup>RWTH Aachen University,</span>
+              <span class="author-block"><sup>2</sup>ETH AI Center,</span>
+              <span class="author-block"><sup>3</sup>ETH Zurich,</span>
+              <span class="author-block"><sup>4</sup>NVIDIA</span>
+            </div>
             <span class="link-block">
-              <a href="https://arxiv.org/abs/2210.03105"
-                 class="external-link button is-normal is-rounded is-dark">
+              <a href="https://arxiv.org/abs/2210.03105" class="external-link button is-normal is-rounded is-dark">
                 <span class="icon">
-                    <i class="fas fa-file-pdf"></i>
+                  <i class="fas fa-file-pdf"></i>
                 </span>
                 <span>Paper</span>
               </a>
             </span>
             <span class="link-block">
-              <a href="https://github.com/JonasSchult/Mask3D"
-                  class="external-link button is-normal is-rounded is-dark">
+              <a href="https://github.com/JonasSchult/Mask3D" class="external-link button is-normal is-rounded is-dark">
                 <span class="icon">
-                    <i class="fab fa-github"></i>
+                  <i class="fab fa-github"></i>
                 </span>
                 <span>Code</span>
               </a>
             </span>
             <span class="link-block">
               <a href="https://omnomnom.vision.rwth-aachen.de/data/mask3d/visualizations/scannet/"
-                  class="external-link button is-normal is-rounded is-dark">
+                class="external-link button is-normal is-rounded is-dark">
                 <span class="icon">
-                    <i class="fa fa-images"></i>
+                  <i class="fa fa-images"></i>
                 </span>
                 <span>ScanNet Visualizations</span>
               </a>
             </span>
             <span class="link-block">
               <a href="https://omnomnom.vision.rwth-aachen.de/data/mask3d/visualizations/scannet200/"
-                  class="external-link button is-normal is-rounded is-dark">
+                class="external-link button is-normal is-rounded is-dark">
                 <span class="icon">
-                    <i class="fa fa-images"></i>
+                  <i class="fa fa-images"></i>
                 </span>
                 <span>ScanNet200 Visualizations</span>
               </a>
             </span>
             <span class="link-block">
               <a href="https://omnomnom.vision.rwth-aachen.de/data/mask3d/visualizations/s3dis/"
-                  class="external-link button is-normal is-rounded is-dark">
+                class="external-link button is-normal is-rounded is-dark">
                 <span class="icon">
-                    <i class="fa fa-images"></i>
+                  <i class="fa fa-images"></i>
                 </span>
                 <span>S3DIS Visualizations</span>
               </a>
             </span>
             <span class="link-block">
               <a href="https://omnomnom.vision.rwth-aachen.de/data/mask3d/visualizations/stpls3d/"
-                  class="external-link button is-normal is-rounded is-dark">
+                class="external-link button is-normal is-rounded is-dark">
                 <span class="icon">
-                    <i class="fa fa-images"></i>
+                  <i class="fa fa-images"></i>
                 </span>
                 <span>STPLS3D Visualizations</span>
               </a>
             </span>
             <span class="link-block">
               <a href="https://mix3d-demo.nekrasov.dev/mask3d/"
-                  class="external-link button is-normal is-rounded is-dark"
-                  style="background-color: #943434;">
+                class="external-link button is-normal is-rounded is-dark" style="background-color: #943434;">
                 <span class="icon">
-                    <i class="fa fa-camera-retro"></i>
+                  <i class="fa fa-camera-retro"></i>
                 </span>
                 <span>Try it out on your own scans!</span>
               </a>
             </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+    </div>
+  </section>
+
+  <section class="hero teaser">
+    <div class="container is-max-desktop">
+      <div class="hero-body">
+        <img src="assets/teaser.jpg" style="max-width:100%" />
+        <h2 class="subtitle has-text-centered">
+        </h2>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <!-- Abstract. -->
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified">
+            <p>
+              Modern 3D semantic instance segmentation approaches predominantly rely on specialized voting mechanisms
+              followed by carefully designed geometric clustering techniques.
+              Building on the successes of recent Transformer-based methods for object detection and image segmentation,
+              we propose a Transformer-based approach for 3D semantic instance segmentation.
+              We show that we can leverage generic Transformer building blocks to
+              directly predict instance masks from 3D point clouds.
+              In our model called Mask3D each object instance is represented as an <em>instance query</em>.
+              Using Transformer decoders, the instance queries are learned by iteratively attending to point cloud
+              features at multiple scales.
+              Combined with point features, the instance queries directly yield all instance masks in parallel.
+              Mask3D has several advantages over current state-of-the-art approaches, since it neither relies on (1)
+              voting schemes which require hand-selected geometric properties (such as centers) nor (2) geometric
+              grouping mechanisms requiring manually-tuned hyper-parameters (e.g. radii) and (3) enables a loss that
+              directly optimizes instance masks.
+              Mask3D sets a new state-of-the-art on ScanNet test (+6.2 mAP), S3DIS 6-fold (+10.1 mAP), STPLS3D (+10.9
+              mAP) and the recent ScanNet200 test (+12.4 mAP).
+            </p>
+          </div>
+        </div>
+      </div>
+      <!--/ Abstract. -->
+
+      <!-- Concurrent Work. -->
+      <div class="columns is-centered">
+        <div class="column is-full-width">
+          <h2 class="title is-3">Visual Comparison to SoftGroup</h2>
+          <div class="content has-text-justified">
+            <p>
+              We compare Mask3D with SoftGroup, the currently best performing voting-based 3D instance segmentation
+              approach.
+              We highlight two error cases for SoftGroup and show Mask3D for comparison.
+            </p>
+          </div>
+          <h2 class="title is-4">Example 1: Large Non-Convex Shapes</h2>
+          <figure class="cd-image-container">
+            <img src="assets/softgroup_table.jpg" alt="Original Image">
+            <span class="cd-image-label" data-type="original">
+            </span>
+
+            <div class="cd-resize-img"> <!-- the resizable image on top -->
+              <img src="assets/mask3d_table.jpg" alt="Modified Image">
+              <span class="cd-image-label" data-type="modified">
+              </span>
+            </div>
+
+            <span class="cd-handle"></span>
+          </figure> <!-- cd-image-container -->
+          <h2 class="title is-4">Example 2: Nearby Instances</h2>
+          <figure class="cd-image-container">
+            <img src="assets/softgroup_chairs.jpg" alt="Original Image">
+            <span class="cd-image-label" data-type="original">
+            </span>
+
+            <div class="cd-resize-img"> <!-- the resizable image on top -->
+              <img src="assets/mask3d_chairs.jpg" alt="Modified Image">
+              <span class="cd-image-label" data-type="modified">
+              </span>
+            </div>
+
+            <span class="cd-handle"></span>
+          </figure> <!-- cd-image-container -->
+        </div>
+      </div>
+      <!--/ Concurrent Work. -->
+
+      <!-- Concurrent Work. -->
+      <div class="columns is-centered">
+        <div class="column is-full-width">
+          <h2 class="title is-3">A Closer Look: Paradigm Comparison</h2>
+          <div class="content has-text-justified">
+          </div>
+          <h2 class="title is-4">Example 1: Large Non-Convex Shapes</h2>
+          <figure class="cd-image-container">
+            <img src="assets/softgroup_table_center_votes.jpg" alt="Original Image">
+            <span class="cd-image-label" data-type="original">
+            </span>
+
+            <div class="cd-resize-img"> <!-- the resizable image on top -->
+              <img src="assets/mask3d_table_heatmap.jpg" alt="Modified Image">
+              <span class="cd-image-label" data-type="modified">
+              </span>
+            </div>
+
+            <span class="cd-handle"></span>
+          </figure> <!-- cd-image-container -->
+          <h2 class="title is-4">Example 2: Nearby Instances</h2>
+          <figure class="cd-image-container">
+            <img src="assets/softgroup_chairs_center_votes.jpg" alt="Original Image">
+            <span class="cd-image-label" data-type="original">
+            </span>
+
+            <div class="cd-resize-img"> <!-- the resizable image on top -->
+              <img src="assets/mask3d_chairs_heatmap.jpg" alt="Modified Image">
+              <span class="cd-image-label" data-type="modified">
+              </span>
+            </div>
+
+            <span class="cd-handle"></span>
+          </figure> <!-- cd-image-container -->
+        </div>
+      </div>
+      <!--/ Concurrent Work. -->
+
+      <section class="section" id="BibTeX">
+        <div class="container is-max-desktop content">
+          <h2 class="title">BibTeX</h2>
+          <pre><code>@article{Schult23,
+  title     = {{Mask3D for 3D Semantic Instance Segmentation}},
+  author    = {Schult, Jonas and Engelmann, Francis and Hermans, Alexander and Litany, Or and Tang, Siyu and Leibe, Bastian},
+  booktitle = {{International Conference on Robotics and Automation (ICRA)}},
+  year      = {2023}
+}</code></pre>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <div class="container">
+          <div class="columns is-centered">
+            <div class="column is-8">
+              <div class="content">
+                <p>
+                  This website is licensed under a <a rel="license"
+                    href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+                    Commons Attribution-ShareAlike 4.0 International License</a>.
+                </p>
+                <p>
+                  It borrows the source code of <a href="https://github.com/nerfies/nerfies.github.io">this website</a>.
+                  We would like to thank Utkarsh Sinha and Keunhong Park.
+                </p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="hero teaser">
-  <div class="container is-max-desktop">
-    <div class="hero-body">
-      <img src="assets/teaser.jpg" style="max-width:100%" />
-      <h2 class="subtitle has-text-centered">
-      </h2>
-    </div>
-  </div>
-</section>
-
-<section class="section">
-  <div class="container is-max-desktop">
-    <!-- Abstract. -->
-    <div class="columns is-centered has-text-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">Abstract</h2>
-        <div class="content has-text-justified">
-          <p>
-            Modern 3D semantic instance segmentation approaches predominantly rely on specialized voting mechanisms followed by carefully designed geometric clustering techniques.
-            Building on the successes of recent Transformer-based methods for object detection and image segmentation,
-            we propose a Transformer-based approach for 3D semantic instance segmentation.
-            We show that we can leverage generic Transformer building blocks to
-            directly predict instance masks from 3D point clouds.
-            In our model called Mask3D each object instance is represented as an <em>instance query</em>.
-            Using Transformer decoders, the instance queries are learned by iteratively attending to point cloud features at multiple scales.
-            Combined with point features, the instance queries directly yield all instance masks in parallel.
-            Mask3D has several advantages over current state-of-the-art approaches, since it neither relies on (1) voting schemes which require hand-selected geometric properties (such as centers) nor (2) geometric grouping mechanisms requiring manually-tuned hyper-parameters (e.g. radii) and (3) enables a loss that directly optimizes instance masks.
-            Mask3D sets a new state-of-the-art on ScanNet test (+6.2 mAP), S3DIS 6-fold  (+10.1 mAP), STPLS3D (+10.9 mAP) and the recent ScanNet200 test (+12.4 mAP).
-          </p>
-        </div>
-      </div>
-    </div>
-    <!--/ Abstract. -->
-
-    <!-- Video -->
-    <div class="columns is-centered has-text-centered">
-        <div class="column is-four-fifths">
-          <h2 class="title is-3">Video</h2>
-          <div class="content has-text-justified">
-            <iframe style="  display: block; margin-left: auto; margin-right: auto;" width="69.7%" height="300px" src="https://www.youtube.com/embed/lhG8SZvZBTw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-        </div>
-      </div>
-    </div>
-
-    <!-- Concurrent Work. -->
-    <div class="columns is-centered">
-      <div class="column is-full-width">
-        <h2 class="title is-3">Visual Comparison to SoftGroup</h2>
-        <div class="content has-text-justified">
-          <p>
-            We compare Mask3D with SoftGroup, the currently best performing voting-based 3D instance segmentation approach.
-            We highlight two error cases for SoftGroup and show Mask3D for comparison.
-          </p>
-        </div>
-        <h2 class="title is-4">Example 1: Large Non-Convex Shapes</h2>
-        <figure class="cd-image-container">
-          <img src="assets/softgroup_table.jpg" alt="Original Image">
-          <span class="cd-image-label" data-type="original">
-          </span>
-      
-          <div class="cd-resize-img"> <!-- the resizable image on top -->
-            <img src="assets/mask3d_table.jpg" alt="Modified Image">
-            <span class="cd-image-label" data-type="modified">
-            </span>
-          </div>
-      
-          <span class="cd-handle"></span>
-        </figure> <!-- cd-image-container -->
-        <h2 class="title is-4">Example 2: Nearby Instances</h2>
-        <figure class="cd-image-container">
-          <img src="assets/softgroup_chairs.jpg" alt="Original Image">
-          <span class="cd-image-label" data-type="original">
-          </span>
-      
-          <div class="cd-resize-img"> <!-- the resizable image on top -->
-            <img src="assets/mask3d_chairs.jpg" alt="Modified Image">
-            <span class="cd-image-label" data-type="modified">
-            </span>
-          </div>
-      
-          <span class="cd-handle"></span>
-        </figure> <!-- cd-image-container -->
-      </div>
-    </div>
-    <!--/ Concurrent Work. -->
-
-    <!-- Concurrent Work. -->
-    <div class="columns is-centered">
-      <div class="column is-full-width">
-        <h2 class="title is-3">A Closer Look: Paradigm Comparison</h2>
-        <div class="content has-text-justified">
-        </div>
-        <h2 class="title is-4">Example 1: Large Non-Convex Shapes</h2>
-        <figure class="cd-image-container">
-          <img src="assets/softgroup_table_center_votes.jpg" alt="Original Image">
-          <span class="cd-image-label" data-type="original">
-          </span>
-      
-          <div class="cd-resize-img"> <!-- the resizable image on top -->
-            <img src="assets/mask3d_table_heatmap.jpg" alt="Modified Image">
-            <span class="cd-image-label" data-type="modified">
-            </span>
-          </div>
-      
-          <span class="cd-handle"></span>
-        </figure> <!-- cd-image-container -->
-        <h2 class="title is-4">Example 2: Nearby Instances</h2>
-        <figure class="cd-image-container">
-          <img src="assets/softgroup_chairs_center_votes.jpg" alt="Original Image">
-          <span class="cd-image-label" data-type="original"> 
-          </span>
-      
-          <div class="cd-resize-img"> <!-- the resizable image on top -->
-            <img src="assets/mask3d_chairs_heatmap.jpg" alt="Modified Image">
-            <span class="cd-image-label" data-type="modified"> 
-            </span>
-          </div>
-      
-          <span class="cd-handle"></span>
-        </figure> <!-- cd-image-container -->
-      </div>
-    </div>
-    <!--/ Concurrent Work. -->
-
-<section class="section" id="BibTeX">
-  <div class="container is-max-desktop content">
-    <h2 class="title">BibTeX</h2>
-    <pre><code>@article{Schult22,
-  title     = {{Mask3D for 3D Semantic Instance Segmentation}},
-  author    = {Schult, Jonas and Engelmann, Francis and Hermans, Alexander and Litany, Or and Tang, Siyu and Leibe, Bastian},
-  booktitle = {{arXiv:2210.03105}},
-  year      = {2022}
-}</code></pre>
-  </div>
-</section>
-
-<footer class="footer">
-  <div class="container">
-    <div class="columns is-centered">
-      <div class="column is-8">
-        <div class="content">
-          <p>
-            This website is licensed under a <a rel="license"
-                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
-            Commons Attribution-ShareAlike 4.0 International License</a>.
-          </p>
-          <p>
-            It borrows the source code of <a href="https://github.com/nerfies/nerfies.github.io">this website</a>.
-            We would like to thank Utkarsh Sinha and Keunhong Park.
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-</footer>
+      </footer>
 </body>
 <script src="js/jquery-2.1.1.js"></script>
 <script src="js/jquery.mobile.custom.min.js"></script> <!-- Resource jQuery -->
 <script src="js/main.js"></script> <!-- Resource jQuery -->
+
 </html>
