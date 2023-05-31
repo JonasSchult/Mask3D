@@ -39,12 +39,15 @@ class BasePreprocessing:
 
     @logger.catch
     def preprocess(self):
-        self.n_jobs = multiprocessing.cpu_count() if self.n_jobs == -1 else self.n_jobs
+        self.n_jobs = (
+            multiprocessing.cpu_count() if self.n_jobs == -1 else self.n_jobs
+        )
         for mode in self.modes:
             database = []
             logger.info(f"Tasks for {mode}: {len(self.files[mode])}")
             parallel_results = Parallel(n_jobs=self.n_jobs, verbose=10)(
-                delayed(self.process_file)(file, mode) for file in self.files[mode]
+                delayed(self.process_file)(file, mode)
+                for file in self.files[mode]
             )
             for filebase in parallel_results:
                 database.append(filebase)
@@ -97,7 +100,9 @@ class BasePreprocessing:
         train_database_path: str = "./data/processed/train_database.yaml",
         mode="instance",
     ):
-        self.n_jobs = multiprocessing.cpu_count() if self.n_jobs == -1 else self.n_jobs
+        self.n_jobs = (
+            multiprocessing.cpu_count() if self.n_jobs == -1 else self.n_jobs
+        )
         train_database = self._load_yaml(train_database_path)
         instance_database = []
         logger.info(f"Files in database: {len(train_database)}")
@@ -116,11 +121,17 @@ class BasePreprocessing:
         for instance_id in np.unique(labels[:, 1]):
             occupied_indices = np.isin(labels[:, 1], instance_id)
             instance_points = points[occupied_indices].copy()
-            instance_classes = np.unique(instance_points[:, 9]).astype(int).tolist()
+            instance_classes = (
+                np.unique(instance_points[:, 9]).astype(int).tolist()
+            )
 
-            hash_string = str(sample_from_database["filepath"]) + str(instance_id)
+            hash_string = str(sample_from_database["filepath"]) + str(
+                instance_id
+            )
             hash_string = md5(hash_string.encode("utf-8")).hexdigest()
-            instance_filepath = self.save_dir / "instances" / f"{hash_string}.npy"
+            instance_filepath = (
+                self.save_dir / "instances" / f"{hash_string}.npy"
+            )
             instance = {
                 "classes": instance_classes,
                 "instance_filepath": str(instance_filepath),
@@ -137,7 +148,8 @@ class BasePreprocessing:
         pass
 
     def compute_color_mean_std(
-        self, train_database_path: str = "./data/processed/train_database.yaml",
+        self,
+        train_database_path: str = "./data/processed/train_database.yaml",
     ):
         pass
 
@@ -149,8 +161,12 @@ class BasePreprocessing:
     def joint_database(self, train_modes=["train", "validation"]):
         joint_db = []
         for mode in train_modes:
-            joint_db.extend(self._load_yaml(self.save_dir / (mode + "_database.yaml")))
-        self._save_yaml(self.save_dir / "train_validation_database.yaml", joint_db)
+            joint_db.extend(
+                self._load_yaml(self.save_dir / (mode + "_database.yaml"))
+            )
+        self._save_yaml(
+            self.save_dir / "train_validation_database.yaml", joint_db
+        )
 
     @classmethod
     def _read_json(cls, path):
@@ -161,7 +177,9 @@ class BasePreprocessing:
     @classmethod
     def _save_yaml(cls, path, file):
         with open(path, "w") as f:
-            yaml.safe_dump(file, f, default_style=None, default_flow_style=False)
+            yaml.safe_dump(
+                file, f, default_style=None, default_flow_style=False
+            )
 
     @classmethod
     def _dict_to_yaml(cls, dictionary):

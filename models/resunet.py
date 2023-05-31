@@ -47,7 +47,9 @@ class MinkUNetBase(ResNetBase):
             D=D,
         )
 
-        self.bn1 = get_norm(self.NORM_TYPE, self.PLANES[0], D, bn_momentum=bn_momentum)
+        self.bn1 = get_norm(
+            self.NORM_TYPE, self.PLANES[0], D, bn_momentum=bn_momentum
+        )
         self.block1 = self._make_layer(
             self.BLOCK,
             self.PLANES[0],
@@ -66,7 +68,9 @@ class MinkUNetBase(ResNetBase):
             conv_type=self.NON_BLOCK_CONV_TYPE,
             D=D,
         )
-        self.bn2 = get_norm(self.NORM_TYPE, self.inplanes, D, bn_momentum=bn_momentum)
+        self.bn2 = get_norm(
+            self.NORM_TYPE, self.inplanes, D, bn_momentum=bn_momentum
+        )
         self.block2 = self._make_layer(
             self.BLOCK,
             self.PLANES[1],
@@ -85,7 +89,9 @@ class MinkUNetBase(ResNetBase):
             conv_type=self.NON_BLOCK_CONV_TYPE,
             D=D,
         )
-        self.bn3 = get_norm(self.NORM_TYPE, self.inplanes, D, bn_momentum=bn_momentum)
+        self.bn3 = get_norm(
+            self.NORM_TYPE, self.inplanes, D, bn_momentum=bn_momentum
+        )
         self.block3 = self._make_layer(
             self.BLOCK,
             self.PLANES[2],
@@ -104,7 +110,9 @@ class MinkUNetBase(ResNetBase):
             conv_type=self.NON_BLOCK_CONV_TYPE,
             D=D,
         )
-        self.bn4 = get_norm(self.NORM_TYPE, self.inplanes, D, bn_momentum=bn_momentum)
+        self.bn4 = get_norm(
+            self.NORM_TYPE, self.inplanes, D, bn_momentum=bn_momentum
+        )
         self.block4 = self._make_layer(
             self.BLOCK,
             self.PLANES[3],
@@ -187,7 +195,13 @@ class MinkUNetBase(ResNetBase):
             ME.MinkowskiBatchNorm(512),
             ME.MinkowskiReLU(),
             conv(
-                512, out_channels, kernel_size=1, stride=1, dilation=1, bias=True, D=D
+                512,
+                out_channels,
+                kernel_size=1,
+                stride=1,
+                dilation=1,
+                bias=True,
+                D=D,
             ),
         )
 
@@ -305,7 +319,9 @@ class MinkUNetHyper(MinkUNetBase):
     # To use the model, must call initialize_coords before forward pass.
     # Once data is processed, call clear to reset the model before calling initialize_coords
     def __init__(self, in_channels, out_channels, config, D=3, **kwargs):
-        super(MinkUNetBase, self).__init__(in_channels, out_channels, config, D)
+        super(MinkUNetBase, self).__init__(
+            in_channels, out_channels, config, D
+        )
 
     def network_initialization(self, in_channels, out_channels, config, D):
         # Setup net_metadata
@@ -330,7 +346,9 @@ class MinkUNetHyper(MinkUNetBase):
             D=D,
         )
 
-        self.bn1 = get_norm(self.NORM_TYPE, self.PLANES[0], D, bn_momentum=bn_momentum)
+        self.bn1 = get_norm(
+            self.NORM_TYPE, self.PLANES[0], D, bn_momentum=bn_momentum
+        )
         self.block1 = self._make_layer(
             self.BLOCK,
             self.PLANES[0],
@@ -349,7 +367,9 @@ class MinkUNetHyper(MinkUNetBase):
             conv_type=self.NON_BLOCK_CONV_TYPE,
             D=D,
         )
-        self.bn2 = get_norm(self.NORM_TYPE, self.inplanes, D, bn_momentum=bn_momentum)
+        self.bn2 = get_norm(
+            self.NORM_TYPE, self.inplanes, D, bn_momentum=bn_momentum
+        )
         self.block2 = self._make_layer(
             self.BLOCK,
             self.PLANES[1],
@@ -368,7 +388,9 @@ class MinkUNetHyper(MinkUNetBase):
             conv_type=self.NON_BLOCK_CONV_TYPE,
             D=D,
         )
-        self.bn3 = get_norm(self.NORM_TYPE, self.inplanes, D, bn_momentum=bn_momentum)
+        self.bn3 = get_norm(
+            self.NORM_TYPE, self.inplanes, D, bn_momentum=bn_momentum
+        )
         self.block3 = self._make_layer(
             self.BLOCK,
             self.PLANES[2],
@@ -387,7 +409,9 @@ class MinkUNetHyper(MinkUNetBase):
             conv_type=self.NON_BLOCK_CONV_TYPE,
             D=D,
         )
-        self.bn4 = get_norm(self.NORM_TYPE, self.inplanes, D, bn_momentum=bn_momentum)
+        self.bn4 = get_norm(
+            self.NORM_TYPE, self.inplanes, D, bn_momentum=bn_momentum
+        )
         self.block4 = self._make_layer(
             self.BLOCK,
             self.PLANES[3],

@@ -22,14 +22,18 @@ class SemanticKittiPreprocessing(BasePreprocessing):
 
         git_repo = Path(git_repo)
         self.create_label_database(git_repo / "config" / "semantic-kitti.yaml")
-        self.config = self._load_yaml(git_repo / "config" / "semantic-kitti.yaml")
+        self.config = self._load_yaml(
+            git_repo / "config" / "semantic-kitti.yaml"
+        )
         self.pose = dict()
 
         for mode in self.modes:
             scene_mode = "valid" if mode == "validation" else mode
             self.pose[mode] = dict()
             for scene in sorted(self.config["split"][scene_mode]):
-                filepaths = list(self.data_dir.glob(f"*/{scene:02}/velodyne/*bin"))
+                filepaths = list(
+                    self.data_dir.glob(f"*/{scene:02}/velodyne/*bin")
+                )
                 filepaths = [str(file) for file in filepaths]
                 self.files[mode].extend(natsorted(filepaths))
                 calibration = parse_calibration(
@@ -38,7 +42,8 @@ class SemanticKittiPreprocessing(BasePreprocessing):
                 self.pose[mode].update(
                     {
                         scene: parse_poses(
-                            Path(filepaths[0]).parent.parent / "poses.txt", calibration,
+                            Path(filepaths[0]).parent.parent / "poses.txt",
+                            calibration,
                         ),
                     }
                 )
@@ -92,7 +97,9 @@ class SemanticKittiPreprocessing(BasePreprocessing):
                 "bin", "label"
             )
             filebase["label_filepath"] = label_filepath
-            label = np.fromfile(label_filepath, dtype=np.uint32).astype(np.int32)
+            label = np.fromfile(label_filepath, dtype=np.uint32).astype(
+                np.int32
+            )
             if not points.shape[0] == label.shape[0]:
                 raise ValueError("Files do not have same length")
             semantic_label = label & 0xFFFF
@@ -119,11 +126,11 @@ class SemanticKittiPreprocessing(BasePreprocessing):
 
 
 def parse_calibration(filename):
-    """ read calibration file with given filename
-        Returns
-        -------
-        dict
-            Calibration matrices as 4x4 numpy arrays.
+    """read calibration file with given filename
+    Returns
+    -------
+    dict
+        Calibration matrices as 4x4 numpy arrays.
     """
     calib = {}
 
@@ -143,11 +150,11 @@ def parse_calibration(filename):
 
 
 def parse_poses(filename, calibration):
-    """ read poses file with per-scan poses from given filename
-        Returns
-        -------
-        list
-            list of poses as 4x4 numpy arrays.
+    """read poses file with per-scan poses from given filename
+    Returns
+    -------
+    list
+        list of poses as 4x4 numpy arrays.
     """
 
     poses = []

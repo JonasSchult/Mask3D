@@ -19,7 +19,9 @@ class Res16UNetBase(ResNetBase):
 
     # To use the model, must call initialize_coords before forward pass.
     # Once data is processed, call clear to reset the model before calling initialize_coords
-    def __init__(self, in_channels, out_channels, config, D=3, out_fpn=False, **kwargs):
+    def __init__(
+        self, in_channels, out_channels, config, D=3, out_fpn=False, **kwargs
+    ):
         super().__init__(in_channels, out_channels, config, D)
         self.out_fpn = out_fpn
 
@@ -46,7 +48,9 @@ class Res16UNetBase(ResNetBase):
             D=D,
         )
 
-        self.bn0 = get_norm(self.NORM_TYPE, self.inplanes, D, bn_momentum=bn_momentum)
+        self.bn0 = get_norm(
+            self.NORM_TYPE, self.inplanes, D, bn_momentum=bn_momentum
+        )
 
         self.conv1p1s2 = conv(
             self.inplanes,
@@ -57,7 +61,9 @@ class Res16UNetBase(ResNetBase):
             conv_type=self.NON_BLOCK_CONV_TYPE,
             D=D,
         )
-        self.bn1 = get_norm(self.NORM_TYPE, self.inplanes, D, bn_momentum=bn_momentum)
+        self.bn1 = get_norm(
+            self.NORM_TYPE, self.inplanes, D, bn_momentum=bn_momentum
+        )
         self.block1 = self._make_layer(
             self.BLOCK,
             self.PLANES[0],
@@ -76,7 +82,9 @@ class Res16UNetBase(ResNetBase):
             conv_type=self.NON_BLOCK_CONV_TYPE,
             D=D,
         )
-        self.bn2 = get_norm(self.NORM_TYPE, self.inplanes, D, bn_momentum=bn_momentum)
+        self.bn2 = get_norm(
+            self.NORM_TYPE, self.inplanes, D, bn_momentum=bn_momentum
+        )
         self.block2 = self._make_layer(
             self.BLOCK,
             self.PLANES[1],
@@ -95,7 +103,9 @@ class Res16UNetBase(ResNetBase):
             conv_type=self.NON_BLOCK_CONV_TYPE,
             D=D,
         )
-        self.bn3 = get_norm(self.NORM_TYPE, self.inplanes, D, bn_momentum=bn_momentum)
+        self.bn3 = get_norm(
+            self.NORM_TYPE, self.inplanes, D, bn_momentum=bn_momentum
+        )
         self.block3 = self._make_layer(
             self.BLOCK,
             self.PLANES[2],
@@ -114,7 +124,9 @@ class Res16UNetBase(ResNetBase):
             conv_type=self.NON_BLOCK_CONV_TYPE,
             D=D,
         )
-        self.bn4 = get_norm(self.NORM_TYPE, self.inplanes, D, bn_momentum=bn_momentum)
+        self.bn4 = get_norm(
+            self.NORM_TYPE, self.inplanes, D, bn_momentum=bn_momentum
+        )
         self.block4 = self._make_layer(
             self.BLOCK,
             self.PLANES[3],
@@ -217,7 +229,12 @@ class Res16UNetBase(ResNetBase):
         )
 
         self.final = conv(
-            self.PLANES[7], out_channels, kernel_size=1, stride=1, bias=True, D=D
+            self.PLANES[7],
+            out_channels,
+            kernel_size=1,
+            stride=1,
+            bias=True,
+            D=D,
         )
         self.relu = MinkowskiReLU(inplace=True)
 
@@ -373,8 +390,10 @@ class Res16UNet34B(Res16UNet34):
 class Res16UNet34C(Res16UNet34):
     PLANES = (32, 64, 128, 256, 256, 128, 96, 96)
 
+
 class Custom30M(Res16UNet34):
     PLANES = (32, 64, 128, 256, 128, 64, 64, 32)
+
 
 class Res16UNet34D(Res16UNet34):
     PLANES = (32, 64, 128, 256, 256, 128, 96, 128)
@@ -418,7 +437,7 @@ class STRes16UNet18A(STRes16UNet18):
 
 class STResTesseract16UNetBase(STRes16UNetBase):
     pass
-    #CONV_TYPE = ConvType.HYPERCUBE
+    # CONV_TYPE = ConvType.HYPERCUBE
 
 
 class STResTesseract16UNet18A(STRes16UNet18A, STResTesseract16UNetBase):

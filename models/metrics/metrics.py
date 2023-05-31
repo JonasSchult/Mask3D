@@ -41,6 +41,8 @@ class IoU:
 
         # Just in case we get a division by 0, ignore/hide the error
         with np.errstate(divide="ignore", invalid="ignore"):
-            iou = true_positive / (true_positive + false_positive + false_negative)
+            iou = true_positive / (
+                true_positive + false_positive + false_negative
+            )
 
         return iou

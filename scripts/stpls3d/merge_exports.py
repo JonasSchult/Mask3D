@@ -21,23 +21,35 @@ for scene03 in tqdm(glob(f"{vs03}/*.txt")):
             mask_path, class_id, score = line.split(" ")
 
             if int(class_id) in [1, 3, 4, 7, 8, 11, 12, 13]:
-                instances.append(f'{mask_path.replace("pred_mask", "pred_mask_03")} {class_id} {score}')
+                instances.append(
+                    f'{mask_path.replace("pred_mask", "pred_mask_03")} {class_id} {score}'
+                )
                 print(instances[-1])
             else:
-                print(f'DELETE {target_path}/{mask_path.replace("pred_mask", "pred_mask_03")}')
-                os.remove(f'{target_path}/{mask_path.replace("pred_mask", "pred_mask_03")}')
+                print(
+                    f'DELETE {target_path}/{mask_path.replace("pred_mask", "pred_mask_03")}'
+                )
+                os.remove(
+                    f'{target_path}/{mask_path.replace("pred_mask", "pred_mask_03")}'
+                )
 
         with open(f'{vs02}/{scene03.split("/")[-1]}', "r") as file02:
             while line := file02.readline().rstrip():
                 mask_path, class_id, score = line.split(" ")
 
                 if int(class_id) not in [1, 3, 4, 7, 8, 11, 12, 13]:
-                    instances.append(f'{mask_path.replace("pred_mask", "pred_mask_02")} {class_id} {score}')
+                    instances.append(
+                        f'{mask_path.replace("pred_mask", "pred_mask_02")} {class_id} {score}'
+                    )
                     print(instances[-1])
                 else:
-                    print(f'DELETE {target_path}/{mask_path.replace("pred_mask", "pred_mask_02")}')
-                    os.remove(f'{target_path}/{mask_path.replace("pred_mask", "pred_mask_02")}')
+                    print(
+                        f'DELETE {target_path}/{mask_path.replace("pred_mask", "pred_mask_02")}'
+                    )
+                    os.remove(
+                        f'{target_path}/{mask_path.replace("pred_mask", "pred_mask_02")}'
+                    )
 
-    with open(f'{target_path}/{scene03.split("/")[-1]}', 'w') as fout:
+    with open(f'{target_path}/{scene03.split("/")[-1]}', "w") as fout:
         for line in instances:
             fout.write(f"{line}\n")

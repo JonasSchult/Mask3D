@@ -16,7 +16,12 @@ import matplotlib.pyplot as plt
 
 
 def point_cloud_plolty(
-    coordinates, label_color, label_text, prediction_color, prediction_text, normals,
+    coordinates,
+    label_color,
+    label_text,
+    prediction_color,
+    prediction_text,
+    normals,
 ):
     def draw_point_cloud(coords, colors=None, label_text=None):
         marker = dict(size=1, opacity=0.8)
@@ -35,13 +40,19 @@ def point_cloud_plolty(
         return fig
 
     fig = make_subplots(
-        rows=1, cols=2, specs=[[{"type": "scatter3d"}, {"type": "scatter3d"}]],
+        rows=1,
+        cols=2,
+        specs=[[{"type": "scatter3d"}, {"type": "scatter3d"}]],
     )
     fig.add_trace(
-        draw_point_cloud(coordinates, prediction_color, prediction_text), row=1, col=1,
+        draw_point_cloud(coordinates, prediction_color, prediction_text),
+        row=1,
+        col=1,
     )
     # adding image with prediction
-    fig.add_trace(draw_point_cloud(coordinates, label_color, label_text), row=1, col=2)
+    fig.add_trace(
+        draw_point_cloud(coordinates, label_color, label_text), row=1, col=2
+    )
     fig.show()
     # data = fig.to_image(width=1080, height=720, format="png")
     # image = Image.open(BytesIO(data))
@@ -170,10 +181,17 @@ def draw_confsion_matrix(confusion_matrix, label_db):
     column_names = np.full((len(index)), "empty")
     for k, v in label_db.items():
         column_names[index == k] = v["name"]
-    df_cm = DataFrame(confusion_matrix, index=column_names, columns=column_names)
+    df_cm = DataFrame(
+        confusion_matrix, index=column_names, columns=column_names
+    )
     # pretty_plot_confusion_matrix(df_cm, fz=9)
     sns.heatmap(
-        df_cm, annot=True, fmt="d", linewidths=0.25, annot_kws={"size": 5}, vmax=10000
+        df_cm,
+        annot=True,
+        fmt="d",
+        linewidths=0.25,
+        annot_kws={"size": 5},
+        vmax=10000,
     )
     buf = BytesIO()
     plt.savefig(buf, format="jpg")

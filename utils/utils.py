@@ -37,6 +37,7 @@ def load_baseline_model(cfg, model):
     model.model.load_state_dict(state_dict)
     return cfg, model
 
+
 def load_backbone_checkpoint_with_missing_or_exsessive_keys(cfg, model):
     state_dict = torch.load(cfg.general.backbone_checkpoint)["state_dict"]
     correct_dict = dict(model.state_dict())
@@ -44,18 +45,23 @@ def load_backbone_checkpoint_with_missing_or_exsessive_keys(cfg, model):
     # if parametrs not found in checkpoint they will be randomly initialized
     for key in state_dict.keys():
         if correct_dict.pop(f"model.backbone.{key}", None) is None:
-            logger.warning(f"Key not found, it will be initialized randomly: {key}")
+            logger.warning(
+                f"Key not found, it will be initialized randomly: {key}"
+            )
 
     # if parametrs have different shape, it will randomly initialize
     state_dict = torch.load(cfg.general.backbone_checkpoint)["state_dict"]
     correct_dict = dict(model.state_dict())
     for key in correct_dict.keys():
         if key.replace("model.backbone.", "") not in state_dict:
-            logger.warning(
-                f"{key} not in loaded checkpoint"
+            logger.warning(f"{key} not in loaded checkpoint")
+            state_dict.update(
+                {key.replace("model.backbone.", ""): correct_dict[key]}
             )
-            state_dict.update({key.replace("model.backbone.", ""): correct_dict[key]})
-        elif state_dict[key.replace("model.backbone.", "")].shape != correct_dict[key].shape:
+        elif (
+            state_dict[key.replace("model.backbone.", "")].shape
+            != correct_dict[key].shape
+        ):
             logger.warning(
                 f"incorrect shape {key}:{state_dict[key.replace('model.backbone.', '')].shape} vs {correct_dict[key].shape}"
             )
@@ -74,6 +80,7 @@ def load_backbone_checkpoint_with_missing_or_exsessive_keys(cfg, model):
     model.load_state_dict(new_state_dict)
     return cfg, model
 
+
 def load_checkpoint_with_missing_or_exsessive_keys(cfg, model):
     state_dict = torch.load(cfg.general.checkpoint)["state_dict"]
     correct_dict = dict(model.state_dict())
@@ -81,16 +88,16 @@ def load_checkpoint_with_missing_or_exsessive_keys(cfg, model):
     # if parametrs not found in checkpoint they will be randomly initialized
     for key in state_dict.keys():
         if correct_dict.pop(key, None) is None:
-            logger.warning(f"Key not found, it will be initialized randomly: {key}")
+            logger.warning(
+                f"Key not found, it will be initialized randomly: {key}"
+            )
 
     # if parametrs have different shape, it will randomly initialize
     state_dict = torch.load(cfg.general.checkpoint)["state_dict"]
     correct_dict = dict(model.state_dict())
     for key in correct_dict.keys():
         if key not in state_dict:
-            logger.warning(
-                f"{key} not in loaded checkpoint"
-            )
+            logger.warning(f"{key} not in loaded checkpoint")
             state_dict.update({key: correct_dict[key]})
         elif state_dict[key].shape != correct_dict[key].shape:
             logger.warning(

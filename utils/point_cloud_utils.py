@@ -14,7 +14,9 @@ def load_ply(filepath):
     feats = None
     labels = None
     if ({"red", "green", "blue"} - set(data.dtype.names)) == set():
-        feats = np.array([data["red"], data["green"], data["blue"]], dtype=np.uint8).T
+        feats = np.array(
+            [data["red"], data["green"], data["blue"]], dtype=np.uint8
+        ).T
     if "label" in data.dtype.names:
         labels = np.array(data["label"], dtype=np.uint32)
     return coords, feats, labels
@@ -75,5 +77,7 @@ def write_point_cloud_in_ply(
     ply_data = np.empty(len(coords), dtype=dtypes)
     for i, dtype in enumerate(dtypes):
         ply_data[dtype[0]] = combined_coords[:, i]
-    ply_data = PlyData([PlyElement.describe(ply_data, "vertex", comments=comments)])
+    ply_data = PlyData(
+        [PlyElement.describe(ply_data, "vertex", comments=comments)]
+    )
     ply_data.write(filepath)

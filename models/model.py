@@ -3,10 +3,10 @@ from MinkowskiEngine import MinkowskiNetwork
 
 class Model(MinkowskiNetwork):
     """
-  Base network for all sparse convnet
+    Base network for all sparse convnet
 
-  By default, all networks are segmentation networks.
-  """
+    By default, all networks are segmentation networks.
+    """
 
     OUT_PIXEL_DIST = -1
 
@@ -19,8 +19,8 @@ class Model(MinkowskiNetwork):
 
 class HighDimensionalModel(Model):
     """
-  Base network for all spatio (temporal) chromatic sparse convnet
-  """
+    Base network for all spatio (temporal) chromatic sparse convnet
+    """
 
     def __init__(self, in_channels, out_channels, config, D, **kwargs):
         assert D > 4, "Num dimension smaller than 5"

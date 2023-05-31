@@ -6,7 +6,8 @@ import math
 import torch
 from torch import nn
 import numpy as np
-#from utils.pc_util import shift_scale_points
+
+# from utils.pc_util import shift_scale_points
 
 
 def shift_scale_points(pred_xyz, src_range, dst_range=None):
@@ -17,7 +18,9 @@ def shift_scale_points(pred_xyz, src_range, dst_range=None):
     """
     if dst_range is None:
         dst_range = [
-            torch.zeros((src_range[0].shape[0], 3), device=src_range[0].device),
+            torch.zeros(
+                (src_range[0].shape[0], 3), device=src_range[0].device
+            ),
             torch.ones((src_range[0].shape[0], 3), device=src_range[0].device),
         ]
 
@@ -49,7 +52,7 @@ class PositionEmbeddingCoordsSine(nn.Module):
         pos_type="fourier",
         d_pos=None,
         d_in=3,
-        gauss_scale=1.0
+        gauss_scale=1.0,
     ):
         super().__init__()
         self.d_pos = d_pos
@@ -102,7 +105,9 @@ class PositionEmbeddingCoordsSine(nn.Module):
                 rems -= 2
 
             if cdim != prev_dim:
-                dim_t = torch.arange(cdim, dtype=torch.float32, device=xyz.device)
+                dim_t = torch.arange(
+                    cdim, dtype=torch.float32, device=xyz.device
+                )
                 dim_t = self.temperature ** (2 * (dim_t // 2) / cdim)
 
             # create batch x cdim x nccords embedding
@@ -159,7 +164,9 @@ class PositionEmbeddingCoordsSine(nn.Module):
                 out = self.get_sine_embeddings(xyz, num_channels, input_range)
         elif self.pos_type == "fourier":
             with torch.no_grad():
-                out = self.get_fourier_embeddings(xyz, num_channels, input_range)
+                out = self.get_fourier_embeddings(
+                    xyz, num_channels, input_range
+                )
         else:
             raise ValueError(f"Unknown {self.pos_type}")
 
@@ -168,7 +175,5 @@ class PositionEmbeddingCoordsSine(nn.Module):
     def extra_repr(self):
         st = f"type={self.pos_type}, scale={self.scale}, normalize={self.normalize}"
         if hasattr(self, "gauss_B"):
-            st += (
-                f", gaussB={self.gauss_B.shape}, gaussBsum={self.gauss_B.sum().item()}"
-            )
+            st += f", gaussB={self.gauss_B.shape}, gaussBsum={self.gauss_B.sum().item()}"
         return st

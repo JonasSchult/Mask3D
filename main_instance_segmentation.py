@@ -11,7 +11,7 @@ from utils.utils import (
     flatten_dict,
     load_baseline_model,
     load_checkpoint_with_missing_or_exsessive_keys,
-    load_backbone_checkpoint_with_missing_or_exsessive_keys
+    load_backbone_checkpoint_with_missing_or_exsessive_keys,
 )
 from pytorch_lightning import Trainer, seed_everything
 
@@ -39,7 +39,9 @@ def get_parameters(cfg: DictConfig):
         os.makedirs(cfg.general.save_dir)
     else:
         print("EXPERIMENT ALREADY EXIST")
-        cfg['trainer']['resume_from_checkpoint'] = f"{cfg.general.save_dir}/last-epoch.ckpt"
+        cfg["trainer"][
+            "resume_from_checkpoint"
+        ] = f"{cfg.general.save_dir}/last-epoch.ckpt"
 
     for log in cfg.logging:
         print(log)
@@ -50,7 +52,9 @@ def get_parameters(cfg: DictConfig):
 
     model = InstanceSegmentation(cfg)
     if cfg.general.backbone_checkpoint is not None:
-        cfg, model = load_backbone_checkpoint_with_missing_or_exsessive_keys(cfg, model)
+        cfg, model = load_backbone_checkpoint_with_missing_or_exsessive_keys(
+            cfg, model
+        )
     if cfg.general.checkpoint is not None:
         cfg, model = load_checkpoint_with_missing_or_exsessive_keys(cfg, model)
 
@@ -58,7 +62,9 @@ def get_parameters(cfg: DictConfig):
     return cfg, model, loggers
 
 
-@hydra.main(config_path="conf", config_name="config_base_instance_segmentation.yaml")
+@hydra.main(
+    config_path="conf", config_name="config_base_instance_segmentation.yaml"
+)
 def train(cfg: DictConfig):
     os.chdir(hydra.utils.get_original_cwd())
     cfg, model, loggers = get_parameters(cfg)
@@ -78,7 +84,9 @@ def train(cfg: DictConfig):
     runner.fit(model)
 
 
-@hydra.main(config_path="conf", config_name="config_base_instance_segmentation.yaml")
+@hydra.main(
+    config_path="conf", config_name="config_base_instance_segmentation.yaml"
+)
 def test(cfg: DictConfig):
     # because hydra wants to change dir for some reason
     os.chdir(hydra.utils.get_original_cwd())
@@ -87,13 +95,16 @@ def test(cfg: DictConfig):
         gpus=cfg.general.gpus,
         logger=loggers,
         weights_save_path=str(cfg.general.save_dir),
-        **cfg.trainer
+        **cfg.trainer,
     )
     runner.test(model)
 
-@hydra.main(config_path="conf", config_name="config_base_instance_segmentation.yaml")
+
+@hydra.main(
+    config_path="conf", config_name="config_base_instance_segmentation.yaml"
+)
 def main(cfg: DictConfig):
-    if cfg['general']['train_mode']:
+    if cfg["general"]["train_mode"]:
         train(cfg)
     else:
         test(cfg)

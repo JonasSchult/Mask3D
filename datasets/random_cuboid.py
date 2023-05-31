@@ -25,11 +25,11 @@ class RandomCuboid(object):
     def __init__(
         self,
         min_points,
-        #aspect=0.8,
+        # aspect=0.8,
         crop_length=6.0,
-        version1=True
+        version1=True,
     ):
-        #self.aspect = aspect
+        # self.aspect = aspect
         self.crop_length = crop_length
         self.min_points = min_points
         self.version1 = version1
@@ -44,23 +44,31 @@ class RandomCuboid(object):
         )
 
         for _ in range(100):
-            #crop_range = self.min_crop + np.random.rand(3) * (
+            # crop_range = self.min_crop + np.random.rand(3) * (
             #    self.max_crop - self.min_crop
-            #)
-            #crop_range[-1] = 999.
+            # )
+            # crop_range[-1] = 999.
             # if not check_aspect(crop_range, self.aspect):
             #     continue
 
-            sample_center = point_cloud[:, :2].min(axis=0) + range_xyz/2
+            sample_center = point_cloud[:, :2].min(axis=0) + range_xyz / 2
 
             if self.version1:
-                offset_x = np.random.uniform(-range_xyz[0]/4,range_xyz[0]/4)
-                offset_y = np.random.uniform(-range_xyz[1]/4,range_xyz[1]/4)
+                offset_x = np.random.uniform(
+                    -range_xyz[0] / 4, range_xyz[0] / 4
+                )
+                offset_y = np.random.uniform(
+                    -range_xyz[1] / 4, range_xyz[1] / 4
+                )
             else:
-                offset_x = np.random.uniform(-(range_xyz[0]/2) + self.crop_length / 4,
-                                             +(range_xyz[0]/2) - self.crop_length / 4)
-                offset_y = np.random.uniform(-(range_xyz[1]/2) + self.crop_length / 4,
-                                             +(range_xyz[1]/2) - self.crop_length / 4)
+                offset_x = np.random.uniform(
+                    -(range_xyz[0] / 2) + self.crop_length / 4,
+                    +(range_xyz[0] / 2) - self.crop_length / 4,
+                )
+                offset_y = np.random.uniform(
+                    -(range_xyz[1] / 2) + self.crop_length / 4,
+                    +(range_xyz[1] / 2) - self.crop_length / 4,
+                )
 
             sample_center[0] = sample_center[0] + offset_x
             sample_center[1] = sample_center[1] + offset_y

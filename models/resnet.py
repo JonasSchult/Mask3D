@@ -43,7 +43,10 @@ class ResNetBase(Model):
         )
 
         self.bn1 = get_norm(
-            NormType.BATCH_NORM, self.inplanes, D=self.D, bn_momentum=bn_momentum
+            NormType.BATCH_NORM,
+            self.inplanes,
+            D=self.D,
+            bn_momentum=bn_momentum,
         )
         self.relu = ME.MinkowskiReLU(inplace=True)
         self.pool = sum_pool(
