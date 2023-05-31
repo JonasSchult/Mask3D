@@ -1,59 +1,71 @@
-import re
 import os
+import re
+
 import numpy as np
 from fire import Fire
-from natsort import natsorted
 from loguru import logger
+from natsort import natsorted
+
 from datasets.preprocessing.base_preprocessing import BasePreprocessing
 
 
-class ScannetPreprocessing(BasePreprocessing):
+class S3DISPreprocessing(BasePreprocessing):
     def __init__(
-            self,
-            data_dir: str = "./data/raw/s3dis",
-            save_dir: str = "./data/processed/s3dis",
-            modes: tuple = ("Area_1", "Area_2", "Area_3", "Area_4", "Area_5", "Area_6"),
-            n_jobs: int = -1,
+        self,
+        data_dir: str = "./data/raw/s3dis",
+        save_dir: str = "./data/processed/s3dis",
+        modes: tuple = (
+            "Area_1",
+            "Area_2",
+            "Area_3",
+            "Area_4",
+            "Area_5",
+            "Area_6",
+        ),
+        n_jobs: int = -1,
     ):
         super().__init__(data_dir, save_dir, modes, n_jobs)
 
         self.class_map = {
-            'ceiling': 0,
-            'floor': 1,
-            'wall': 2,
-            'beam': 3,
-            'column': 4,
-            'window': 5,
-            'door': 6,
-            'table': 7,
-            'chair': 8,
-            'sofa': 9,
-            'bookcase': 10,
-            'board': 11,
-            'clutter': 12,
-            'stairs': 12  # stairs are also mapped to clutter
+            "ceiling": 0,
+            "floor": 1,
+            "wall": 2,
+            "beam": 3,
+            "column": 4,
+            "window": 5,
+            "door": 6,
+            "table": 7,
+            "chair": 8,
+            "sofa": 9,
+            "bookcase": 10,
+            "board": 11,
+            "clutter": 12,
+            "stairs": 12,  # stairs are also mapped to clutter
         }
 
         self.color_map = [
-            [0, 255, 0],        # ceiling
-            [0, 0, 255],        # floor
-            [0, 255, 255],      # wall
-            [255, 255, 0],      # beam
-            [255, 0, 255],      # column
-            [100, 100, 255],    # window
-            [200, 200, 100],    # door
-            [170, 120, 200],    # table
-            [255, 0, 0],        # chair
-            [200, 100, 100],    # sofa
-            [10, 200, 100],     # bookcase
-            [200, 200, 200],    # board
-            [50, 50, 50]]      # clutter
+            [0, 255, 0],  # ceiling
+            [0, 0, 255],  # floor
+            [0, 255, 255],  # wall
+            [255, 255, 0],  # beam
+            [255, 0, 255],  # column
+            [100, 100, 255],  # window
+            [200, 200, 100],  # door
+            [170, 120, 200],  # table
+            [255, 0, 0],  # chair
+            [200, 100, 100],  # sofa
+            [10, 200, 100],  # bookcase
+            [200, 200, 200],  # board
+            [50, 50, 50],
+        ]  # clutter
 
         self.create_label_database()
 
         for mode in self.modes:
             filepaths = []
-            for scene_path in [f.path for f in os.scandir(self.data_dir / mode) if f.is_dir()]:
+            for scene_path in [
+                f.path for f in os.scandir(self.data_dir / mode) if f.is_dir()
+            ]:
                 filepaths.append(scene_path)
             self.files[mode] = natsorted(filepaths)
 
@@ -61,9 +73,9 @@ class ScannetPreprocessing(BasePreprocessing):
         label_database = dict()
         for class_name, class_id in self.class_map.items():
             label_database[class_id] = {
-                'color': self.color_map[class_id],
-                'name': class_name,
-                'validation': True
+                "color": self.color_map[class_id],
+                "name": class_name,
+                "validation": True,
             }
 
         self._save_yaml(self.save_dir / "label_database.yaml", label_database)
@@ -72,8 +84,9 @@ class ScannetPreprocessing(BasePreprocessing):
     def _buf_count_newlines_gen(self, fname):
         def _make_gen(reader):
             while True:
-                b = reader(2 ** 16)
-                if not b: break
+                b = reader(2**16)
+                if not b:
+                    break
                 yield b
 
         with open(fname, "rb") as f:
@@ -103,19 +116,32 @@ class ScannetPreprocessing(BasePreprocessing):
         scene_name = filepath.split("/")[-1]
         instance_counter = 0
         scene_points = []
-        for instance in [f for f in os.scandir(self.data_dir / mode / scene_name / "Annotations")
-                         if f.name.endswith(".txt")]:
+        for instance in [
+            f
+            for f in os.scandir(
+                self.data_dir / mode / scene_name / "Annotations"
+            )
+            if f.name.endswith(".txt")
+        ]:
             instance_class = self.class_map[instance.name.split("_")[0]]
             instance_points = np.loadtxt(instance.path)
 
             instance_normals = np.ones((instance_points.shape[0], 3))
-            instance_class = np.array(instance_class).repeat(instance_points.shape[0])[..., None]
-            instance_id = np.array(instance_counter).repeat(instance_points.shape[0])[..., None]
+            instance_class = np.array(instance_class).repeat(
+                instance_points.shape[0]
+            )[..., None]
+            instance_id = np.array(instance_counter).repeat(
+                instance_points.shape[0]
+            )[..., None]
 
-            instance_points = np.hstack((instance_points,
-                                         instance_normals,
-                                         instance_class,
-                                         instance_id))
+            instance_points = np.hstack(
+                (
+                    instance_points,
+                    instance_normals,
+                    instance_class,
+                    instance_id,
+                )
+            )
 
             scene_points.append(instance_points)
             instance_counter += 1
@@ -131,7 +157,9 @@ class ScannetPreprocessing(BasePreprocessing):
 
         # add segment id as additional feature (DUMMY)
         points = np.hstack((points, np.ones(points.shape[0])[..., None]))
-        points[:, [9, 10, -1]] = points[:, [-1, 9, 10]]  # move segments after RGB
+        points[:, [9, 10, -1]] = points[
+            :, [-1, 9, 10]
+        ]  # move segments after RGB
 
         gt_data = (points[:, -2] + 1) * 1000 + points[:, -1] + 1
 
@@ -144,7 +172,9 @@ class ScannetPreprocessing(BasePreprocessing):
         np.save(processed_filepath, points.astype(np.float32))
         filebase["filepath"] = str(processed_filepath)
 
-        processed_gt_filepath = self.save_dir / "instance_gt" / mode / f"{scene_name}.txt"
+        processed_gt_filepath = (
+            self.save_dir / "instance_gt" / mode / f"{scene_name}.txt"
+        )
         if not processed_gt_filepath.parent.exists():
             processed_gt_filepath.parent.mkdir(parents=True, exist_ok=True)
         np.savetxt(processed_gt_filepath, gt_data.astype(np.int32), fmt="%d")
@@ -162,11 +192,12 @@ class ScannetPreprocessing(BasePreprocessing):
         ]
         return filebase
 
-    def compute_color_mean_std(
-            self, train_database_path: str = ""
-    ):
-        area_database_paths = [f for f in os.scandir(self.save_dir)
-                               if f.name.startswith("Area_") and f.name.endswith(".yaml")]
+    def compute_color_mean_std(self, train_database_path: str = ""):
+        area_database_paths = [
+            f
+            for f in os.scandir(self.save_dir)
+            if f.name.startswith("Area_") and f.name.endswith(".yaml")
+        ]
 
         for database_path in area_database_paths:
             database = self._load_yaml(database_path.path)
@@ -176,12 +207,17 @@ class ScannetPreprocessing(BasePreprocessing):
                 color_mean.append(sample["color_mean"])
 
             color_mean = np.array(color_mean).mean(axis=0)
-            color_std = np.sqrt(np.array(color_std).mean(axis=0) - color_mean ** 2)
+            color_std = np.sqrt(
+                np.array(color_std).mean(axis=0) - color_mean**2
+            )
             feats_mean_std = {
                 "mean": [float(each) for each in color_mean],
                 "std": [float(each) for each in color_std],
             }
-            self._save_yaml(self.save_dir / f"{database_path.name}_color_mean_std.yaml", feats_mean_std)
+            self._save_yaml(
+                self.save_dir / f"{database_path.name}_color_mean_std.yaml",
+                feats_mean_std,
+            )
 
         for database_path in area_database_paths:
             all_mean, all_std = [], []
@@ -195,26 +231,47 @@ class ScannetPreprocessing(BasePreprocessing):
                     all_mean.append(sample["color_mean"])
 
             all_color_mean = np.array(all_mean).mean(axis=0)
-            all_color_std = np.sqrt(np.array(all_std).mean(axis=0) - all_color_mean ** 2)
+            all_color_std = np.sqrt(
+                np.array(all_std).mean(axis=0) - all_color_mean**2
+            )
             feats_mean_std = {
                 "mean": [float(each) for each in all_color_mean],
                 "std": [float(each) for each in all_color_std],
             }
             file_path = database_path.name.replace("_database.yaml", "")
-            self._save_yaml(self.save_dir / f"{file_path}_color_mean_std.yaml", feats_mean_std)
+            self._save_yaml(
+                self.save_dir / f"{file_path}_color_mean_std.yaml",
+                feats_mean_std,
+            )
 
     @logger.catch
     def fix_bugs_in_labels(self):
         pass
 
-    def joint_database(self, train_modes=("Area_1", "Area_2", "Area_3", "Area_4", "Area_5", "Area_6")):
+    def joint_database(
+        self,
+        train_modes=(
+            "Area_1",
+            "Area_2",
+            "Area_3",
+            "Area_4",
+            "Area_5",
+            "Area_6",
+        ),
+    ):
         for mode in train_modes:
             joint_db = []
             for let_out in train_modes:
                 if mode == let_out:
                     continue
-                joint_db.extend(self._load_yaml(self.save_dir / (let_out + "_database.yaml")))
-            self._save_yaml(self.save_dir / f"train_{mode}_database.yaml", joint_db)
+                joint_db.extend(
+                    self._load_yaml(
+                        self.save_dir / (let_out + "_database.yaml")
+                    )
+                )
+            self._save_yaml(
+                self.save_dir / f"train_{mode}_database.yaml", joint_db
+            )
 
     def _parse_scene_subscene(self, name):
         scene_match = re.match(r"scene(\d{4})_(\d{2})", name)
@@ -222,4 +279,4 @@ class ScannetPreprocessing(BasePreprocessing):
 
 
 if __name__ == "__main__":
-    Fire(ScannetPreprocessing)
+    Fire(S3DISPreprocessing)
