@@ -61,29 +61,40 @@ We adapt the codebase of [Mix3D](https://github.com/kumuji/mix3d) which provides
 ### Dependencies :memo:
 The main dependencies of the project are the following:
 ```yaml
-python: 3.10.6
-cuda: 11.6
+python: 3.10.9
+cuda: 11.3
 ```
 You can set up a conda environment as follows
 ```
-conda create --name=mask3d python=3.10.6
-conda activate mask3d
+export TORCH_CUDA_ARCH_LIST="6.0 6.1 6.2 7.0 7.2 7.5 8.0 8.6"
 
-conda update -n base -c defaults conda
-conda install openblas-devel -c anaconda
+conda env create -f environment.yml
 
-pip install torch torchvision --extra-index-url https://download.pytorch.org/whl/cu116
-pip install torch-scatter -f https://data.pyg.org/whl/torch-1.12.1+cu116.html
+conda activate mask3d_cuda113
 
-pip install ninja==1.10.2.3
-pip install pytorch-lightning fire imageio tqdm wandb python-dotenv pyviz3d scipy plyfile scikit-learn trimesh loguru albumentations volumentations
+pip3 install torch==1.12.1+cu113 torchvision==0.13.1+cu113 --extra-index-url https://download.pytorch.org/whl/cu113
+pip3 install torch-scatter -f https://data.pyg.org/whl/torch-1.12.1+cu113.html
+pip3 install 'git+https://github.com/facebookresearch/detectron2.git@710e7795d0eeadf9def0e7ef957eea13532e34cf' --no-deps
 
-pip install antlr4-python3-runtime==4.8
-pip install black==21.4b2
-pip install omegaconf==2.0.6 hydra-core==1.0.5 --no-deps
-pip install 'git+https://github.com/facebookresearch/detectron2.git@710e7795d0eeadf9def0e7ef957eea13532e34cf' --no-deps
+mkdir third_party
+cd third_party
 
-cd third_party/pointnet2 && python setup.py install
+git clone --recursive "https://github.com/NVIDIA/MinkowskiEngine"
+cd MinkowskiEngine
+git checkout 02fc608bea4c0549b0a7b00ca1bf15dee4a0b228
+python setup.py install --force_cuda --blas=openblas
+
+cd ..
+git clone https://github.com/ScanNet/ScanNet.git
+cd ScanNet/Segmentator
+git checkout 3e5726500896748521a6ceb81271b0f5b2c0e7d2
+make
+
+cd ../../pointnet2
+python setup.py install
+
+cd ../../
+pip3 install pytorch-lightning==1.7.2
 ```
 
 ### Data preprocessing :hammer:
@@ -94,9 +105,9 @@ First, we apply Felzenswalb and Huttenlocher's Graph Based Image Segmentation al
 Please refer to the [original repository](https://github.com/ScanNet/ScanNet/tree/master/Segmentator) for details.
 Put the resulting segmentations in `./data/raw/scannet_test_segments`.
 ```
-python datasets/preprocessing/scannet_preprocessing.py preprocess \
+python -m datasets.preprocessing.scannet_preprocessing preprocess \
 --data_dir="PATH_TO_RAW_SCANNET_DATASET" \
---save_dir="../../data/processed/scannet" \
+--save_dir="data/processed/scannet" \
 --git_repo="PATH_TO_SCANNET_GIT_REPO" \
 --scannet200=false/true
 ```
@@ -105,16 +116,16 @@ python datasets/preprocessing/scannet_preprocessing.py preprocess \
 The S3DIS dataset contains some smalls bugs which we initially fixed manually. We will soon release a preprocessing script which directly preprocesses the original dataset. For the time being, please follow the instructions [here](https://github.com/JonasSchult/Mask3D/issues/8#issuecomment-1279535948) to fix the dataset manually. Afterwards, call the preprocessing script as follows:
 
 ```
-python datasets/preprocessing/s3dis_preprocessing.py preprocess \
+python -m datasets.preprocessing.s3dis_preprocessing preprocess \
 --data_dir="PATH_TO_Stanford3dDataset_v1.2" \
---save_dir="../../data/processed/s3dis"
+--save_dir="data/processed/s3dis"
 ```
 
 #### STPLS3D
 ```
-python datasets/preprocessing/stpls3d_preprocessing.py preprocess \
+python -m datasets.preprocessing.stpls3d_preprocessing preprocess \
 --data_dir="PATH_TO_STPLS3D" \
---save_dir="../../data/processed/stpls3d"
+--save_dir="data/processed/stpls3d"
 ```
 
 ### Training and testing :train2:
