@@ -20,7 +20,7 @@ from datasets.scannet200.scannet200_splits import (
 )
 
 import hydra
-import MinkowskiEngine as ME
+import third_party.MinkowskiEngine as ME
 import numpy as np
 import pytorch_lightning as pl
 import torch

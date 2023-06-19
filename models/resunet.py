@@ -1,7 +1,7 @@
 import torch.nn as nn
-import MinkowskiEngine as ME
-import MinkowskiEngine.MinkowskiOps as me
-from MinkowskiEngine import MinkowskiReLU
+import third_party.MinkowskiEngine as ME
+import third_party.MinkowskiEngine.MinkowskiEngine.MinkowskiOps as me
+from third_party.MinkowskiEngine import MinkowskiReLU
 
 from models.resnet import ResNetBase, get_norm
 from models.modules.common import ConvType, NormType, conv, conv_tr
