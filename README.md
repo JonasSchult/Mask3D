@@ -109,7 +109,7 @@ python -m datasets.preprocessing.scannet_preprocessing preprocess \
 --data_dir="PATH_TO_RAW_SCANNET_DATASET" \
 --save_dir="data/processed/scannet" \
 --git_repo="PATH_TO_SCANNET_GIT_REPO" \
---scannet200=false/true
+--scannet200=False/True
 ```
 
 #### S3DIS
