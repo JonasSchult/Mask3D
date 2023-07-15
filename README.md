@@ -66,6 +66,10 @@ cuda: 11.3
 ```
 You can set up a conda environment as follows
 ```
+# Some users experienced issues on Ubuntu with an AMD CPU
+# Install libopenblas-dev (issue #115, thanks WindWing)
+# sudo apt-get install libopenblas-dev
+
 export TORCH_CUDA_ARCH_LIST="6.0 6.1 6.2 7.0 7.2 7.5 8.0 8.6"
 
 conda env create -f environment.yml
