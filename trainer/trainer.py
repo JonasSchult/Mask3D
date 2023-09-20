@@ -1109,7 +1109,7 @@ class InstanceSegmentation(pl.LightningModule):
                                     )
                                 )
                             else:
-                                assert (False, "class not known!")
+                                assert False, "class not known!"
                     else:
                         ap_results[
                             f"{log_prefix}_{class_name}_val_ap"
