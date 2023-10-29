@@ -27,6 +27,7 @@ Mask3D predicts accurate 3D semantic instances achieving state-of-the-art on Sca
 
 ## News
 
+* **29. October 2023**: Check out this [easy setup](https://github.com/cvg/Mask3D) for Mask3D.
 * **17. January 2023**: Mask3D is accepted at ICRA 2023. :fire:
 * **14. October 2022**: STPLS3D support added.
 * **10. October 2022**: Mask3D ranks 2nd on the [STPLS3D Challenge](https://codalab.lisn.upsaclay.fr/competitions/4646#results) hosted by the [Urban3D Workshop](https://urban3dchallenge.github.io/) at ECCV 2022.
