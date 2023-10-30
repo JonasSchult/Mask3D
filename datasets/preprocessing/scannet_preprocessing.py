@@ -28,6 +28,7 @@ class ScannetPreprocessing(BasePreprocessing):
     ):
         super().__init__(data_dir, save_dir, modes, n_jobs)
 
+        # https://github.com/google/python-fire/blob/master/docs/guide.md#boolean-arguments
         self.scannet200 = scannet200
 
         if self.scannet200:
@@ -87,7 +88,8 @@ class ScannetPreprocessing(BasePreprocessing):
                 .rename(columns={"nyu40class": "name"})
                 .replace(" ", "_", regex=True)
             )
-            df = pd.DataFrame([{"name": "empty"}]).append(df)
+            # Compatible with pandas>=2.0.0
+            df = pd.concat([pd.DataFrame([{"name": "empty"}]), df])
             df["validation"] = False
 
             with open(
@@ -203,12 +205,18 @@ class ScannetPreprocessing(BasePreprocessing):
             # gt_data = (points[:, -2] + 1) * 1000 + points[:, -1] + 1
             gt_data = points[:, -2] * 1000 + points[:, -1] + 1
         else:
-            segments_test = "../../data/raw/scannet_test_segments"
-            segment_indexes_filepath = filepath.name.replace(
-                ".ply", ".0.010000.segs.json"
-            )
+            # segments_test = "../../data/raw/scannet_test_segments"
+            # segment_indexes_filepath = filepath.name.replace(
+            #     ".ply", ".0.010000.segs.json"
+            # )
+            segment_indexes_filepath = Path(filepath).with_suffix(".0.010000.segs.json")
+            if not segment_indexes_filepath.exists():
+                print("Generating", segment_indexes_filepath)
+                import os
+                os.system(f"./third_party/ScanNet/Segmentator/segmentator {filepath}")
             segments = self._read_json(
-                f"{segments_test}/{segment_indexes_filepath}"
+                # f"{segments_test}/{segment_indexes_filepath}"
+                segment_indexes_filepath
             )
             segments = np.array(segments["segIndices"])
             # add segment id as additional feature
