@@ -87,7 +87,9 @@ class ScannetPreprocessing(BasePreprocessing):
                 .rename(columns={"nyu40class": "name"})
                 .replace(" ", "_", regex=True)
             )
-            df = pd.DataFrame([{"name": "empty"}]).append(df)
+            # df = pd.DataFrame([{"name": "empty"}]).append(df) # deprecated in pandas 2.0
+            df = pd.concat([pd.DataFrame([{"name": "empty"}]), df], ignore_index=True)
+            
             df["validation"] = False
 
             with open(
